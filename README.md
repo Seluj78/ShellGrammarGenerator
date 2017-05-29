@@ -2,7 +2,7 @@
 
 
 
-#####This shell script converts .yacc files into a parser friendly c file
+##### This shell script converts .yacc files into a parser friendly c file
 
 #### Usage:
 
