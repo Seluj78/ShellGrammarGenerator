@@ -19,6 +19,9 @@ init()
 	if [ ! -f $file_input ]; then
 		echo "File \"$file_input\" not found!"
 		exit 1
+	elif [[  -f $file_output  ]]; then
+		echo "File \"$file_output\" already exist!"
+		exit 1
 	fi
 	touch $file_output
 }
