@@ -2,12 +2,19 @@
 
 
 ```yacc
-%token  WORD
-%token  NEWLINE
-%token  IO_NUMBER
-%token  DLESS  DGREAT  LESSAND  GREATAND  LESSGREAT
+%token  WORD E_TOKEN_WORD
+%token  NEWLINE E_TOKEN-NEWLINE
+%token  IO_NUMBER E_TOKEN_IO_NUMBER
+%token  DLESS E_TOKEN_DLESS
+%token  DGREAT E_TOKEN_DGREAT
+%token  LESSAND E_TOKEN_LESSAND
+%token  GREATAND E_TOKEN_GREATAND
+%token  LESSGREAT E_TOKEN_LESSGREAT
+
 %start  program
+
 %%
+
 program          : linebreak complete_commands linebreak
 | linebreak
 ;
@@ -69,7 +76,6 @@ newline_list     :              NEWLINE
 | newline_list NEWLINE
 ;
 linebreak        : newline_list
-| /* empty */
 ;
 separator_op     : ';'
 ;
