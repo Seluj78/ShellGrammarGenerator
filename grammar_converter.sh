@@ -78,12 +78,40 @@ parse_info()
 ################################################################################
 
 
-#TODO : relative path
+################################################################################
+#                              GENERATOR OUTPUT                                #
+################################################################################
+
+output_include()
+{
+	for file in ${needed_include} ; do
+		echo -e "#include <$file>" >> $file_output
+	done
+}
+
+output_tab()
+{
+	name_start=$(grep -oP "%start\s+\K\w+" $file_input_tmp) #name of start in example it is program
+	#line_start=$(grep -n $name_start $file_input_tmp) # it doesn't work, get line with program, after %%
+	echo $line_start
+	echo $name_start
+
+}
+
+
+process_grammar()
+{
+	output_include
+	output_tab
+}
+################################################################################
+################################################################################
 
 path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
 file_input="$path_of_file/grammar.yacc.example"
 file_input_tmp="$path_of_file/grammar.yacc.tmp"
+needed_include="parser/parser.h stdint.h"
 
 if [ $# = 0 ] || [ $# -ge 5 ]; then
 	help
@@ -124,5 +152,8 @@ echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$fi
 touch $file_input_tmp
 cp $file_input $file_input_tmp
 parse_info
+
+process_grammar
+
 rm $file_input_tmp
 exit 0
