@@ -9,13 +9,15 @@
 ```
 -i --input  (required), used to specify the grammar file (in yacc format). If not set, will display an error
 -o --output (optional), if not set, grammar_converter will output into grammar.c and grammar.h files
--h --h      (help) Will display help
+-h --help   (help) Will display help
 ```
 
 #### Examples:
+
+These two lines here are two ways to call the grammar converter
 ```bash
-sh grammar_converter.sh -i GRAMMAR_FILE -o OUTPUT_FILE
-./ grammar_converter.sh
+sh grammar_converter.sh -i <GRAMMAR_FILE> -o <OUTPUT_FILE>
+./grammar_converter.sh --input <GRAMMAR_FILE> --output <OUTPOUT_FILE>
 ```
 
 An exemple grammar.yacc file can be found [here](grammar.yacc.example)
