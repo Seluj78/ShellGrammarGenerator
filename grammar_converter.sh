@@ -83,14 +83,7 @@ output_include()
 
 output_tab()
 {
-    name_start=$(awk '{for (I=1;I<=NF;I++) if ($I == "%start") {print $(I+1)};}' $file_input)
-
-	echo $name_start
-
-
-	#name_start=$(grep -o "%start\s+\K\w+" $file_input_tmp) #name of start in example it is program
-	#line_start=$(grep -n $name_start $file_input_tmp) # it doesn't work, get line with program, after %%
-	#$echo $line_start
+    name_start=$(awk '{for (I=1;I<=NF;I++) if ($I == "%start") {print $(I+1)};}' $file_input_tmp)
 }
 
 
@@ -98,6 +91,7 @@ process_grammar()
 {
 	output_include
 	output_tab
+	rm_info $file_input_tmp
 }
 
 ################################################################################
@@ -146,7 +140,6 @@ echo "###      GRAMMAR CONVERT       ###"
 echo "##################################"
 echo "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 
-touch $file_input_tmp
 cp $file_input $file_input_tmp
 parse_info
 
