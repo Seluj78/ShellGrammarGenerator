@@ -12,6 +12,8 @@
 -h --help   (help) Will display help
 ```
 
+Everything before %% in the grammar file is configuration
+
 #### Examples:
 
 These two lines here are two ways to call the grammar converter
