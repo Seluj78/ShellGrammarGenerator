@@ -7,6 +7,9 @@
 %token  GREATAND E_TOKEN_GREATAND
 %token  LESSGREAT E_TOKEN_LESSGREAT
 
+%include parser/parser.h
+%include stdint.h
+
 %start  program
 
 %%
