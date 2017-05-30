@@ -115,10 +115,34 @@ process_grammar()
 	rm_info $file_input_tmp
 }
 
+process_numbers()
+{
+    #first_pipe=$(grep -n "|" $file_input_tmp |head -n 1 |cut -d':' -f1)
+    #getnext_line str
+
+    #awk '{ if(NR==n) print $0 }' n=$line $file_input_tmp
+
+    actual=0
+    max=0
+    while read line
+    do
+        if [[ ${line:0:1} == "|" ]]; then
+            (( actual++ ))
+        else
+            if [ $max -lt $actual ]; then
+                max=${actual}
+            fi
+            actual=0
+        fi
+    done < $file_input_tmp;
+
+    max=$(($max + 1))
+    echo "\nuint32_t    grammar[][$max][]=" >> $file_output
+}
+
 ################################################################################
 #                                 MAIN FUNCTION                                #
 ################################################################################
-
 path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
 file_input="$path_of_file/grammar.yacc.example"
@@ -164,6 +188,6 @@ cp $file_input $file_input_tmp
 parse_info
 needed_include=$(parse_includes)
 process_grammar
-
+process_numbers
 rm $file_input_tmp
 exit 0
