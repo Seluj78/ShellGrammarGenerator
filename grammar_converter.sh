@@ -85,17 +85,20 @@ parse_info()
 output_include()
 {
 	for file in ${needed_include} ; do
-		echo -e "#include <$file>" >> $file_output
+		echo "#include <$file>" >> $file_output
 	done
 }
 
 output_tab()
 {
-	name_start=$(grep -oP "%start\s+\K\w+" $file_input_tmp) #name of start in example it is program
-	#line_start=$(grep -n $name_start $file_input_tmp) # it doesn't work, get line with program, after %%
-	echo $line_start
+    name_start=$(awk '{for (I=1;I<=NF;I++) if ($I == "%start") {print $(I+1)};}' $file_input)
+
 	echo $name_start
 
+
+	#name_start=$(grep -o "%start\s+\K\w+" $file_input_tmp) #name of start in example it is program
+	#line_start=$(grep -n $name_start $file_input_tmp) # it doesn't work, get line with program, after %%
+	#$echo $line_start
 }
 
 
