@@ -70,6 +70,27 @@ parse_info()
 	done
 }
 
+get_include()
+{
+    # $1 = line actuelle ou on doit recuperer l'include
+    var=$(sed ''"$1"'q;d' grammar.yacc.example | awk  '{print $2}')
+    echo $var
+}
+
+parse_includes()
+{
+    include_line=$(grep -n "%include" $file_input_tmp |head -n 1 |cut -d':' -f1)
+    include_number=$(grep -c "%include" $file_input_tmp)
+    count=0
+    str=""
+    for (( c=$include_line; $count < $include_number; c++ ))
+    do
+        str="$str $(get_include $c)"
+        (( count++ ))
+    done
+    echo $str
+}
+
 ################################################################################
 #                              GENERATOR OUTPUT                                #
 ################################################################################
@@ -102,7 +123,6 @@ path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
 file_input="$path_of_file/grammar.yacc.example"
 file_input_tmp="$path_of_file/grammar.yacc.tmp"
-needed_include="parser/parser.h stdint.h"
 
 if [ $# = 0 ] || [ $# -ge 5 ]; then
 	help
@@ -142,7 +162,7 @@ echo "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_
 
 cp $file_input $file_input_tmp
 parse_info
-
+needed_include=$(parse_includes)
 process_grammar
 
 rm $file_input_tmp
