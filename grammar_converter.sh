@@ -6,12 +6,12 @@
 
 help()
 {
-	echo -e "\nUsage:  ./grammar_converter.sh [input_file] [desired_output_file.h]"
-	echo -e "\t\033[1;mExample: ./grammar_converter.sh -i grammar.file -o grammar.h\033[0m"
+	echo "\nUsage:  ./grammar_converter.sh [input_file] [desired_output_file.h]"
+	echo "\t\033[1;mExample: ./grammar_converter.sh -i grammar.file -o grammar.h\033[0m"
 	echo
-	echo -e "\t\033[1m-i --input\033[0m  (required), used to specify the grammar file (in yacc format). If not set, will display an error"
-	echo -e "\t\033[1m-o --output\033[0m (optional), if not set, grammar_converter will output into grammar.c and grammar.h files"
-	echo -e "\t\033[1m-h --help\033[0m   (help) Will display help"
+	echo "\t\033[1m-i --input\033[0m  (required), used to specify the grammar file (in yacc format). If not set, will display an error"
+	echo "\t\033[1m-o --output\033[0m (optional), if not set, grammar_converter will output into grammar.c and grammar.h files"
+	echo "\t\033[1m-h --help\033[0m   (help) Will display help"
 }
 
 init()
@@ -137,20 +137,20 @@ do
 			exit 1;
 			;;
 		:)
-			echo -e "the option \"$OPTARG\" requiert an argument"
+			echo "the option \"$OPTARG\" requiert an argument"
 			exit 1
 			;;
 		\?)
-			echo -e "\"$OPTARG\" : invalid option"
+			echo "\"$OPTARG\" : invalid option"
 			exit 1
 			;;
 	esac
 done
 init
-echo -e "\n##################################"
-echo -e "###      GRAMMAR CONVERT       ###"
-echo -e "##################################"
-echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
+echo "\n##################################"
+echo "###      GRAMMAR CONVERT       ###"
+echo "##################################"
+echo "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 
 touch $file_input_tmp
 cp $file_input $file_input_tmp
