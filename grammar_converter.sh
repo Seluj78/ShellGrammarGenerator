@@ -118,11 +118,6 @@ process_grammar()
 
 process_numbers()
 {
-    #first_pipe=$(grep -n "|" $file_input_tmp |head -n 1 |cut -d':' -f1)
-    #getnext_line str
-
-    #awk '{ if(NR==n) print $0 }' n=$line $file_input_tmp
-
     actual=0
     max_pipe=0
     max_comma=0
@@ -158,16 +153,47 @@ max_comma=$(echo $max_comma | tr -d ' ')
 
     max_pipe=$(($max_pipe + 1))
     echo "\nuint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
+    #TODO: add the 230 relativ to enum
+}
+
+go_upper()
+{
+    tr '[:lower:]' '[:upper:]' < $file_input_tmp > tmp
+    cat tmp > $file_input_tmp
+    rm tmp
+}
+
+get_first_word_of_line()
+{
+    ret=$(echo $1 | awk '{print $1;}')
+    echo $ret
+}
+
+transform()
+{
+    grep -v "^\s*[|\;]\|^\s*$" $file_input_tmp > tmp
+    echo "{" >> $file_output
+    while read line
+    do
+        first=$(get_first_word_of_line $line)
+        echo "    [$first] =" >> $file_output
+        echo "        {" >> $file_output
+        #millieu
+        echo "        }," >> $file_output
+    done < tmp;
+    echo "};" >> $file_output
+    #TODO: Pas de virgule au dernier
 }
 
 ################################################################################
 #                                 MAIN FUNCTION                                #
 ################################################################################
+
 path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
 file_input="$path_of_file/grammar.yacc.example"
 file_input_tmp="$path_of_file/grammar.yacc.tmp"
-file_input_tmp_tmp="$path_of_file/grammar.yacc.tmp.tmp"
+
 if [ $# = 0 ] || [ $# -ge 5 ]; then
 	help
 	exit 1;
@@ -177,7 +203,6 @@ while getopts ":i:o:h" option
 do
 	case $option in
 		i)
-			#check_path
 			file_input=$OPTARG
 			file_input_tmp=$file_input.tmp
 			;;
@@ -209,5 +234,8 @@ parse_info
 needed_include=$(parse_includes)
 process_grammar
 process_numbers
+go_upper
+nb_grammar=$(grep "^[^|;]" $file_input_tmp | wc -l)
+transform
 rm $file_input_tmp
 exit 0
