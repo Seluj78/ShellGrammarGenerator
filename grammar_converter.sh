@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ################################################################################
 #                              BASES FUNCTIONS                                 #
@@ -202,6 +202,29 @@ get_first_word_of_line()
 #################
 # Middle Output #
 #################
+get_line_n_semili()
+{
+	local number_of_semi=$1
+	(( number_of_semi-- ))
+	local ret_line=0
+	local count=0
+
+#echo "number_of_semi=$number_of_semi,  tmp=$tmp"
+	while read line
+	do
+		#echo "*boucle: count=$count, number=$number_of_semi :=|$line|"
+		if [ "$line" = ";" ]; then
+			(( count++ ))
+		fi
+		(( ret_line++ ))
+		if [ $count = $number_of_semi ]; then
+			break
+		fi
+	done < $2;
+	#echo "ret=$ret_line"
+	echo $ret_line
+}
+
 output_middle()
 {
 	local number_line=$1
@@ -209,45 +232,39 @@ output_middle()
 	local count2=1
 
 	cut -d':' -f2 $file_input_tmp > tmp_output_middle
-	cut -d'|' -f2 tmp_output_middle > tmp1_output_middle
-	cat tmp1_output_middle > tmp_output_middle
+	cat tmp_output_middle > tmp1_output_middle
+	if [ $number_line != 1 ]; then
+		number_line=$(get_line_n_semili "$number_line" tmp_output_middle)
+		(( number_line++ ))
+	fi
 	string_line=$(sed $number_line!d tmp_output_middle)
 	number_of_word=$(echo $string_line | wc -w)
 	number_of_word=$(echo $number_of_word | tr -d ' ')
 
-	#if [ $number_line -lt 4 ]; then
-	#	echo $1"= "$string_line
-	#	echo "*************************"
-	#	cat tmp_output_middle
-	#fi
-	#if [ "$string_line" = ";" ]; then
-	#	(( number_line++ ))
-	#	string_line=$(sed $number_line!d tmp1_output_middle)
-	#	number_of_word=$(echo $string_line | wc -w)
-	#	number_of_word=$(echo $number_of_word | tr -d ' ')
-	#fi
-
 	while [ "$string_line" != ";" ]
 	do
-		echo $string_line
-		printf "\t\t\t{" >> $file_output
+		printf "          {" >> $file_output
 		for word in $string_line
 		do
 			(( number_of_word-- ))
-			if [ ! $number_of_word = 0 ]; then
-				printf $word", " >> $file_output
-			else
-				printf $word >> $file_output
+			if [ $word != "|" ]; then
+				if [ ! $number_of_word = 0 ]; then
+					printf $word", " >> $file_output
+				else
+					printf $word >> $file_output
+				fi
 			fi
 		done
-		printf "}\n" >> $file_output
-		#TODO do ,
 		(( number_line++ ))
 		string_line=$(sed $number_line!d tmp_output_middle)
 		number_of_word=$(echo $string_line | wc -w)
 		number_of_word=$(echo $number_of_word | tr -d ' ')
+		if [ "$string_line" != ";"  ]; then
+			printf "},\n" >> $file_output
+		else
+			printf "}\n" >> $file_output
+		fi
 	done
-	rm tmp_output_middle
 }
 
 transform()
@@ -346,8 +363,8 @@ nb_grammar=$(grep "^[^|;]" $file_input_tmp | wc -l)
 transform
 
 #-- Deletes temporary file --#
-#rm $file_input_tmp
-#rm *tmp*
+rm $file_input_tmp
+rm *tmp*
 exit 0
 
 
