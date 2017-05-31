@@ -123,21 +123,44 @@ process_numbers()
     #awk '{ if(NR==n) print $0 }' n=$line $file_input_tmp
 
     actual=0
-    max=0
+    max_pipe=0
+    max_comma=0
     while read line
     do
         if [[ ${line:0:1} == "|" ]]; then
             (( actual++ ))
         else
-            if [ $max -lt $actual ]; then
-                max=${actual}
+            if [ $max_pipe -lt $actual ]; then
+                max_pipe=${actual}
             fi
             actual=0
         fi
     done < $file_input_tmp;
 
-    max=$(($max + 1))
-    echo "\nuint32_t    grammar[][$max][]=" >> $file_output
+
+cat $file_input_tmp > tmp
+
+cut -d':' -f2 tmp > tmp1
+cut -c 2- tmp1 > tmp2
+
+
+    while read line_2
+    do
+        actual=$(echo $line_2 | wc -w)
+        if [ $max_comma -lt $actual ]; then
+            max_comma=${actual}
+        fi
+        actual=0
+    done < tmp2;
+
+
+rm tmp tmp1 tmp2
+
+
+max_comma=$(echo $max_comma | tr -d ' ')
+
+    max_pipe=$(($max_pipe + 1))
+    echo "\nuint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
 }
 
 ################################################################################
@@ -147,7 +170,7 @@ path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
 file_input="$path_of_file/grammar.yacc.example"
 file_input_tmp="$path_of_file/grammar.yacc.tmp"
-
+file_input_tmp_tmp="$path_of_file/grammar.yacc.tmp.tmp"
 if [ $# = 0 ] || [ $# -ge 5 ]; then
 	help
 	exit 1;
