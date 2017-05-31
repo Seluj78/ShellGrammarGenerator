@@ -8,22 +8,22 @@
 #-- Help display function --#
 help()
 {
-	echo "\nUsage:  ./grammar_converter.sh [input_file] [desired_output_file.h]"
-	echo "\t\033[1;mExample: ./grammar_converter.sh -i grammar.file -o grammar.h\033[0m"
-	echo
-	echo "\t\033[1m-i --input\033[0m  (required), used to specify the grammar file (in yacc format). If not set, will display an error"
-	echo "\t\033[1m-o --output\033[0m (optional), if not set, grammar_converter will output into grammar.c and grammar.h files"
-	echo "\t\033[1m-h --help\033[0m   (help) Will display help"
+	echo -e "\nUsage:  ./grammar_converter.sh [input_file] [desired_output_file.h]"
+	echo -e "\t\033[1;mExample: ./grammar_converter.sh -i grammar.file -o grammar.h\033[0m"
+	echo -e
+	echo -e "\t\033[1m-i --input\033[0m  (required), used to specify the grammar file (in yacc format). If not set, will display an error"
+	echo -e "\t\033[1m-o --output\033[0m (optional), if not set, grammar_converter will output into grammar.c and grammar.h files"
+	echo -e "\t\033[1m-h --help\033[0m   (help) Will display help"
 }
 
 #-- Init display funtion --#
 init()
 {
 	if [ ! -f $file_input ]; then #-- Checks if the input file given by the user exists --#
-		echo "File \"$file_input\" not found!"
+		echo -e "File \"$file_input\" not found!"
 		exit 1
 	elif [[  -f $file_output  ]]; then #-- Checks if the output file doesnt already exists --#
-		echo "File \"$file_output\" already exist!"
+		echo -e "File \"$file_output\" already exist!"
 		exit 1
 	fi
 	touch $file_output
@@ -46,7 +46,7 @@ rm_info()
 add_template()
 {
     new="$2""$1"
-    echo $new
+    echo -e $new
 }
 
 parse_info()
@@ -82,8 +82,8 @@ get_include()
     #-- Gets at line $1 the second word (everything after the %include) --#
     var=$(sed ''"$1"'q;d' $file_input_tmp | awk  '{print $2}')
 
-    #-- echo is used to return a value --#
-    echo $var
+    #-- echo -e is used to return a value --#
+    echo -e $var
 }
 
 parse_includes()
@@ -104,7 +104,7 @@ parse_includes()
     done
 
     #-- return the str variable --#
-    echo $str
+    echo -e $str
 }
 
 ################################################################################
@@ -117,7 +117,7 @@ output_include()
 {
     #-- Prints all the includes --#
 	for header in ${needed_include} ; do
-		echo "#include <$header>" >> $file_output
+		echo -e "#include <$header>" >> $file_output
 	done
 }
 
@@ -165,7 +165,7 @@ process_numbers()
     #-- This one, since everything is cut off, reads the line and gets the highest word count --#
     while read line_2
     do
-        actual=$(echo $line_2 | wc -w)
+        actual=$(echo -e $line_2 | wc -w)
         if [ $max_comma -lt $actual ]; then
             max_comma=${actual}
         fi
@@ -175,13 +175,13 @@ process_numbers()
     rm tmp tmp1 tmp2
 
     #-- trims the trailing whitespaces --#
-    max_comma=$(echo $max_comma | tr -d ' ')
+    max_comma=$(echo -e $max_comma | tr -d ' ')
 
     max_pipe=$(($max_pipe + 1))
 
-    #-- echoes into the file the numbers we got --#
-		echo >> $file_output
-		echo "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
+    #-- echo -ees into the file the numbers we got --#
+		echo -e >> $file_output
+		echo -e "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
     #TODO: add the 230 relativ to enum
 }
 
@@ -196,8 +196,8 @@ go_upper()
 get_first_word_of_line()
 {
     #-- Gets the first line in the title (Its in the title ¯\_(ツ)_/¯) --#
-    ret=$(echo $1 | awk '{print $1;}')
-    echo $ret
+    ret=$(echo -e $1 | awk '{print $1;}')
+    echo -e $ret
 }
 
 #################
@@ -223,7 +223,7 @@ get_line_n_semili()
 			break
 		fi
 	done < $2;
-	echo $ret_line
+	echo -e $ret_line
 }
 
 #-- Output in file_output the "middle" of 3D tab --#
@@ -246,8 +246,8 @@ output_middle()
 	string_line=$(sed $number_line!d tmp_output_middle)
 
 	#-- Gets the number of words into line --#
-	number_of_word=$(echo $string_line | wc -w)
-	number_of_word=$(echo $number_of_word | tr -d ' ')
+	number_of_word=$(echo -e $string_line | wc -w)
+	number_of_word=$(echo -e $number_of_word | tr -d ' ')
 
 #-- Evry line, while you don't meet ';' --#
 	while [ "$string_line" != ";" ]
@@ -270,8 +270,8 @@ output_middle()
 		#-- Next line --#
 		(( number_line++ ))
 		string_line=$(sed $number_line!d tmp_output_middle)
-		number_of_word=$(echo $string_line | wc -w)
-		number_of_word=$(echo $number_of_word | tr -d ' ')
+		number_of_word=$(echo -e $string_line | wc -w)
+		number_of_word=$(echo -e $number_of_word | tr -d ' ')
 		#-- Condition for display ';' or not --#
 		if [ "$string_line" != ";"  ]; then
 			printf "},\n" >> $file_output
@@ -286,7 +286,7 @@ transform()
 {
     #-- Removes all the lines that starts with ';' or '|' --#
     grep -v "^\s*[|\;]\|^\s*$" $file_input_tmp > tmp
-    echo "{" >> $file_output
+    echo -e "{" >> $file_output
 
     nb=$(cat tmp | wc -l)
     #-- Loops in the tmp file --#
@@ -294,17 +294,17 @@ transform()
     while read line
     do
         first=$(get_first_word_of_line $line)
-        echo "    [$first] =" >> $file_output
-        echo "        {" >> $file_output
+        echo -e "    [$first] =" >> $file_output
+        echo -e "        {" >> $file_output
         output_middle $count
         if [ $count != $nb ]; then
-            echo "        }," >> $file_output
+            echo -e "        }," >> $file_output
         else
-            echo "        }" >> $file_output
+            echo -e "        }" >> $file_output
         fi
         (( count++ ))
     done < tmp;
-    echo "};" >> $file_output
+    echo -e "};" >> $file_output
 	rm tmp
     #-- write it into the file --#
 }
@@ -345,11 +345,11 @@ do
 			exit 1;
 			;;
 		:)
-			echo "the option \"$OPTARG\" requiert an argument"
+			echo -e "the option \"$OPTARG\" requiert an argument"
 			exit 1
 			;;
 		\?)
-			echo "\"$OPTARG\" : invalid option"
+			echo -e "\"$OPTARG\" : invalid option"
 			exit 1
 			;;
 	esac
@@ -359,10 +359,10 @@ done
 init
 
 #-- Display a message on the screen --#
-echo "\n##################################"
-echo "###      GRAMMAR CONVERT       ###"
-echo "##################################"
-echo "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
+echo -e "\n##################################"
+echo -e "###      GRAMMAR CONVERT       ###"
+echo -e "##################################"
+echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 
 
 #-- Creates a copy of the input to modify it freely --#
