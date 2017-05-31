@@ -180,7 +180,8 @@ process_numbers()
     max_pipe=$(($max_pipe + 1))
 
     #-- echoes into the file the numbers we got --#
-    echo "\nuint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
+		echo >> $file_output
+		echo "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
     #TODO: add the 230 relativ to enum
 }
 
