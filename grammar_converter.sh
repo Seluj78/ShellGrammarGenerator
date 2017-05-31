@@ -203,6 +203,8 @@ get_first_word_of_line()
 #################
 # Middle Output #
 #################
+
+#-- Gets the Nth ';' --#
 get_line_n_semili()
 {
 	local number_of_semi=$1
@@ -210,10 +212,9 @@ get_line_n_semili()
 	local ret_line=0
 	local count=0
 
-#echo "number_of_semi=$number_of_semi,  tmp=$tmp"
+#-- reads every lines of file (second parameters), and count the number of ';' and number of line --#
 	while read line
 	do
-		#echo "*boucle: count=$count, number=$number_of_semi :=|$line|"
 		if [ "$line" = ";" ]; then
 			(( count++ ))
 		fi
@@ -222,33 +223,43 @@ get_line_n_semili()
 			break
 		fi
 	done < $2;
-	#echo "ret=$ret_line"
 	echo $ret_line
 }
 
+#-- Output in file_output the "middle" of 3D tab --#
 output_middle()
 {
 	local number_line=$1
 	local count=0
 	local count2=1
 
+	#-- Cut everything before ":" --#
 	cut -d':' -f2 $file_input_tmp > tmp_output_middle
-	cat tmp_output_middle > tmp1_output_middle
+
+	#-- After first, number_line = the next ";" + 1 --#
 	if [ $number_line != 1 ]; then
 		number_line=$(get_line_n_semili "$number_line" tmp_output_middle)
 		(( number_line++ ))
 	fi
+
+	#-- Gets the line string into var --#
 	string_line=$(sed $number_line!d tmp_output_middle)
+
+	#-- Gets the number of words into line --#
 	number_of_word=$(echo $string_line | wc -w)
 	number_of_word=$(echo $number_of_word | tr -d ' ')
 
+#-- Evry line, while you don't meet ';' --#
 	while [ "$string_line" != ";" ]
 	do
 		printf "          {" >> $file_output
+		#-- Every is output in file, excepted '|'  --#
 		for word in $string_line
 		do
 			(( number_of_word-- ))
+			#-- Condition for echap '|' --#
 			if [ $word != "|" ]; then
+				#-- Condition for display ',' or not --#
 				if [ ! $number_of_word = 0 ]; then
 					printf $word", " >> $file_output
 				else
@@ -256,10 +267,12 @@ output_middle()
 				fi
 			fi
 		done
+		#-- Next line --#
 		(( number_line++ ))
 		string_line=$(sed $number_line!d tmp_output_middle)
 		number_of_word=$(echo $string_line | wc -w)
 		number_of_word=$(echo $number_of_word | tr -d ' ')
+		#-- Condition for display ';' or not --#
 		if [ "$string_line" != ";"  ]; then
 			printf "},\n" >> $file_output
 		else
