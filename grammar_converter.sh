@@ -279,6 +279,7 @@ output_middle()
 			printf "}\n" >> $file_output
 		fi
 	done
+	rm tmp_output_middle
 }
 
 transform()
