@@ -199,6 +199,57 @@ get_first_word_of_line()
     echo $ret
 }
 
+#################
+# Middle Output #
+#################
+output_middle()
+{
+	local number_line=$1
+	local count=0
+	local count2=1
+
+	cut -d':' -f2 $file_input_tmp > tmp_output_middle
+	cut -d'|' -f2 tmp_output_middle > tmp1_output_middle
+	cat tmp1_output_middle > tmp_output_middle
+	string_line=$(sed $number_line!d tmp_output_middle)
+	number_of_word=$(echo $string_line | wc -w)
+	number_of_word=$(echo $number_of_word | tr -d ' ')
+
+	#if [ $number_line -lt 4 ]; then
+	#	echo $1"= "$string_line
+	#	echo "*************************"
+	#	cat tmp_output_middle
+	#fi
+	#if [ "$string_line" = ";" ]; then
+	#	(( number_line++ ))
+	#	string_line=$(sed $number_line!d tmp1_output_middle)
+	#	number_of_word=$(echo $string_line | wc -w)
+	#	number_of_word=$(echo $number_of_word | tr -d ' ')
+	#fi
+
+	while [ "$string_line" != ";" ]
+	do
+		echo $string_line
+		printf "\t\t\t{" >> $file_output
+		for word in $string_line
+		do
+			(( number_of_word-- ))
+			if [ ! $number_of_word = 0 ]; then
+				printf $word", " >> $file_output
+			else
+				printf $word >> $file_output
+			fi
+		done
+		printf "}\n" >> $file_output
+		#TODO do ,
+		(( number_line++ ))
+		string_line=$(sed $number_line!d tmp_output_middle)
+		number_of_word=$(echo $string_line | wc -w)
+		number_of_word=$(echo $number_of_word | tr -d ' ')
+	done
+	rm tmp_output_middle
+}
+
 transform()
 {
     #-- Removes all the lines that starts with ';' or '|' --#
@@ -213,7 +264,7 @@ transform()
         first=$(get_first_word_of_line $line)
         echo "    [$first] =" >> $file_output
         echo "        {" >> $file_output
-        #millieu
+        output_middle $count
         if [ $count != $nb ]; then
             echo "        }," >> $file_output
         else
@@ -222,6 +273,7 @@ transform()
         (( count++ ))
     done < tmp;
     echo "};" >> $file_output
+	rm tmp
     #-- write it into the file --#
 }
 
@@ -294,8 +346,8 @@ nb_grammar=$(grep "^[^|;]" $file_input_tmp | wc -l)
 transform
 
 #-- Deletes temporary file --#
-rm $file_input_tmp
-rm *tmp*
+#rm $file_input_tmp
+#rm *tmp*
 exit 0
 
 
