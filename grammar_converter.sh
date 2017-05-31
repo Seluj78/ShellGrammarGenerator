@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ################################################################################
 #                              BASES FUNCTIONS                                 #
@@ -73,7 +73,7 @@ parse_info()
 get_include()
 {
     # $1 = line actuelle ou on doit recuperer l'include
-    var=$(sed ''"$1"'q;d' grammar.yacc.example | awk  '{print $2}')
+    var=$(sed ''"$1"'q;d' $file_input_tmp | awk  '{print $2}')
     echo $var
 }
 
@@ -137,12 +137,10 @@ process_numbers()
         fi
     done < $file_input_tmp;
 
-
 cat $file_input_tmp > tmp
 
 cut -d':' -f2 tmp > tmp1
 cut -c 2- tmp1 > tmp2
-
 
     while read line_2
     do
@@ -153,9 +151,7 @@ cut -c 2- tmp1 > tmp2
         actual=0
     done < tmp2;
 
-
 rm tmp tmp1 tmp2
-
 
 max_comma=$(echo $max_comma | tr -d ' ')
 
