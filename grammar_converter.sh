@@ -221,18 +221,24 @@ transform()
     grep -v "^\s*[|\;]\|^\s*$" $file_input_tmp > tmp
     echo "{" >> $file_output
 
+    nb=$(cat tmp | wc -l)
     #-- Loops in the tmp file --#
+    count=1
     while read line
     do
         first=$(get_first_word_of_line $line)
         echo "    [$first] =" >> $file_output
         echo "        {" >> $file_output
         #millieu
-        echo "        }," >> $file_output
+        if [ $count != $nb ]; then
+            echo "        }," >> $file_output
+        else
+            echo "        }" >> $file_output
+        fi
+        (( count++ ))
     done < tmp;
     echo "};" >> $file_output
     #-- write it into the file --#
-    #TODO: Pas de virgule au dernier
 }
 
 ################################################################################
