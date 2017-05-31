@@ -53,26 +53,27 @@ replace_info()
 		fi
 		(( count++ ))
 	done
-	sed -i.bak ''"$start"',$s,'"$old"','"$new"',' "$file_input_tmp"
+new="$2""$old"
+    sed -i.bak ''"$start"',$s,'"$old"','"$new"',' "$file_input_tmp"
 	rm $file_input_tmp.bak
 }
 
 parse_info()
 {
 	token_number=$(grep -c "%token" $file_input_tmp)
-	#token_number = number of tokens to parse and replace
-
+    grep -i "%tokentemplate" $file_input_tmp > tmp
+    template=$(sed 's/[^ ]* //' tmp)
 	n=1
 	while [ $n -le $token_number ]
 	do
-		replace_info $n
+		replace_info $n $template
 		(( n++ ))
 	done
+	rm tmp
 }
 
 get_include()
 {
-    # $1 = line actuelle ou on doit recuperer l'include
     var=$(sed ''"$1"'q;d' $file_input_tmp | awk  '{print $2}')
     echo $var
 }
