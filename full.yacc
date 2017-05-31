@@ -1,11 +1,13 @@
-%token  WORD E_TOKEN_WORD
-%token  NEWLINE E_TOKEN_NEWLINE
-%token  IO_NUMBER E_TOKEN_IO_NUMBER
-%token  DLESS E_TOKEN_DLESS
-%token  DGREAT E_TOKEN_DGREAT
-%token  LESSAND E_TOKEN_LESSAND
-%token  GREATAND E_TOKEN_GREATAND
-%token  LESSGREAT E_TOKEN_LESSGREAT
+%token  WORD
+%token  NEWLINE
+%token  IO_NUMBER
+%token  DLESS
+%token  DGREAT
+%token  LESSAND
+%token  GREATAND
+%token  LESSGREAT
+
+%tokentemplate E_TOKEN_
 
 %include parser/parser.h
 %include stdint.h
