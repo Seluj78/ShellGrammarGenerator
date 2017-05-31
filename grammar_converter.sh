@@ -43,54 +43,38 @@ rm_info()
 	rm $1.bak
 }
 
-replace_info()
+add_template()
 {
-    #-- Get the start line number (%%) --#
-	start=$(awk '/%%/{ print NR; exit }' $file_input_tmp)
-	(( start++ ))
-
-    #-- TODO: REDO THIS --#
-	count=0
-	line=$(sed ''"$1"'!d' $file_input_tmp)
-	for word in $line
-	do
-		if [ $count = 1 ]; then #TODO: fix line 50 of tmpfile !!!!
-			old=$word
-		fi
-		(( count++ ))
-	done
-
-	#-- Concatenates the two strings --#
-    new="$2""$old"
-
-    #-- Replaces the token with the 'templated' token --#
-    sed -i.bak ''"$start"',$s,'"$old"','"$new"',' "$file_input_tmp"
-
-    #-- removes the .bak file --#
-	rm $file_input_tmp.bak
+    new="$2""$1"
+    echo $new
 }
 
 parse_info()
 {
-    #-- Gets the number of tokens to be replaced --#
-	token_number=$(grep -c "%token" $file_input_tmp)
 
-	#-- Gets the line where the %tokentemplate is --#
+    #-- Grabs the %tokentemplate line --#
     grep -i "%tokentemplate" $file_input_tmp > tmp
 
     #-- Gets just the template (removes everything before the space) --#
     template=$(sed 's/[^ ]* //' tmp)
-	n=1
 
-	#-- Loops in the file and replaces the tokens --#
-	while [ $n -le $token_number ]
-	do
-		replace_info $n $template
-		(( n++ ))
-	done
+    #-- Grabs only the tokens --#
+    grep -i "%token " $file_input_tmp | sed -e "s/^%token  //" > tmptokens
 
-	#-- Removes temporary file --#
-	rm tmp
+    count=1
+    while read line
+    do
+            #-- Grabs the token at the $count line --#
+        token=$(sed ''"$count"'!d' tmptokens)
+
+            #-- Adds the template --#
+        token_templated=$(add_template $token $template)
+
+            #-- Does the replacement --#
+        sed -i.bak 's/'"$token"'/'"$token_templated"'/g' $file_input_tmp
+        (( count++ ))
+    done < tmptokens
+    rm $file_input_tmp.bak
 }
 
 get_include()
@@ -311,4 +295,8 @@ transform
 
 #-- Deletes temporary file --#
 rm $file_input_tmp
+rm *tmp*
 exit 0
+
+
+#TODO :make vars local if needed
