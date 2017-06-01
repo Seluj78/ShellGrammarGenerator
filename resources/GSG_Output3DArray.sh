@@ -40,7 +40,6 @@ output_middle()
 
 	#-- Gets the line string with variable --#
 	line_string=$(sed $number_line!d tmp_output_middle)
-	line_string=$(echo $line_string | tr -d ' ')
 
 	#-- Gets the number of words in line --#
 	number_of_word=$(echo -e $line_string | wc -w)
@@ -67,7 +66,6 @@ output_middle()
 		#-- Next line --#
 		(( number_line++ ))
 		line_string=$(sed $number_line!d tmp_output_middle)
-		line_string=$(echo $line_string | tr -d ' ')
 		number_of_word=$(echo -e $line_string | wc -w)
 		number_of_word=$(echo -e $number_of_word | tr -d ' ')
 		#-- Condition for display ';' or not --#
