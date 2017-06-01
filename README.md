@@ -22,7 +22,7 @@ sh grammar_converter.sh -i <GRAMMAR_FILE> -o <OUTPUT_FILE>
 ./grammar_converter.sh --input <GRAMMAR_FILE> --output <OUTPOUT_FILE>
 ```
 
-An exemple grammar.yacc file can be found [here](grammar.yacc.example)
+An exemple grammar.yacc file can be found [here](examples/grammar.yacc.example)
 
 #### Contributing
 
