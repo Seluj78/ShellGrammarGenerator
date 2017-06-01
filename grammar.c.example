@@ -104,7 +104,6 @@ uint32_t	grammar[230][6][4]=
 	[LINEBREAK] =
 		{
 			{NEWLINE_LIST}
-//			[] TODO nead "| /* empty */"
 		},
 	[SEPARATOR_OP] =
 		{
