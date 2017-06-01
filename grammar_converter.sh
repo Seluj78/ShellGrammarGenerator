@@ -415,6 +415,10 @@ parse_info
 needed_include=$(parse_includes)
 process_grammar
 
+#-- START HEADER GENERATION --#
+
+#./header_gen.sh $file_input $needed_include
+
 #-- Deletes temporary file --#
 rm $file_input_tmp
 rm tmptokens
