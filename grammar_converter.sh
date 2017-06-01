@@ -4,7 +4,6 @@
 #                              BASES FUNCTIONS                                 #
 ################################################################################
 
-
 #-- Help display function --#
 help()
 {
@@ -28,6 +27,11 @@ init()
 	fi
 	touch $file_output
 }
+
+################################################################################
+################################################################################
+
+
 
 ################################################################################
 #                              INFO TOKEN FUNCTION                             #
@@ -108,10 +112,13 @@ parse_includes()
 }
 
 ################################################################################
-#                              GENERATOR OUTPUT                                #
 ################################################################################
 
 
+
+################################################################################
+#                              GENERATOR OUTPUT                                #
+################################################################################
 
 output_include()
 {
@@ -127,6 +134,13 @@ get_start()
     name_start=$(awk '{for (I=1;I<=NF;I++) if ($I == "%start") {print $(I+1)};}' $file_input_tmp)
 }
 
+go_upper()
+{
+    #-- Transforms the file into uppercase --#
+    tr '[:lower:]' '[:upper:]' < $file_input_tmp > tmp
+    cat tmp > $file_input_tmp
+    rm tmp
+}
 
 process_grammar()
 {
@@ -134,14 +148,27 @@ process_grammar()
 	output_include
 	get_start
 	rm_info $file_input_tmp
+	process_numbers
+	go_upper
+
+	#-- Gets the number of grammar symbols (Counts the number of words where their line doesnt start with a '|' or a ';') --#
+	nb_grammar=$(grep "^[^|;]" $file_input_tmp | wc -l)
+	output_3D_tab
 }
+
+#########################################
+#           PROCESS NUMBER              #
+#########################################
 
 process_numbers()
 {
-    actual=0
-    max_pipe=0
-    max_comma=0
+	### LOCAL VAR ###
+    local actual=0
+    local max_pipe=0
+    local max_comma=0
+	#################
 
+		### SET/GET MAX_PIPE ###
     #-- Reads every line, and everytime one starts with a '|', reads it to see if it has the most words in it --#
     while read line
     do
@@ -154,7 +181,10 @@ process_numbers()
             actual=0
         fi
     done < $file_input_tmp;
+		#########################
 
+
+		### SET/GET MAX_COMMA ###
     #-- save file_input_tmp in tmp --#
     cat $file_input_tmp > tmp
 
@@ -171,38 +201,30 @@ process_numbers()
         fi
         actual=0
     done < tmp2;
-
     rm tmp tmp1 tmp2
+		#########################
+
 
     #-- trims the trailing whitespaces --#
     max_comma=$(echo -e $max_comma | tr -d ' ')
-
     max_pipe=$(($max_pipe + 1))
-
-    #-- echo -ees into the file the numbers we got --#
-		echo -e >> $file_output
-		echo -e "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
+		output_number
     #TODO: add the 230 relativ to enum
 }
 
-go_upper()
+output_number()
 {
-    #-- transforms the file into uppercase --#
-    tr '[:lower:]' '[:upper:]' < $file_input_tmp > tmp
-    cat tmp > $file_input_tmp
-    rm tmp
+	#-- echo -ees into the file the numbers we got --#
+	echo -e >> $file_output
+	echo -e "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $file_output
 }
 
-get_first_word_of_line()
-{
-    #-- Gets the first line in the title (Its in the title ¯\_(ツ)_/¯) --#
-    ret=$(echo -e $1 | awk '{print $1;}')
-    echo -e $ret
-}
+#########################################
+#########################################
 
-#################
-# Middle Output #
-#################
+#########################################
+#               3D TAB                  #
+#########################################
 
 #-- Gets the Nth ';' --#
 get_line_n_semili()
@@ -242,19 +264,20 @@ output_middle()
 		(( number_line++ ))
 	fi
 
-	#-- Gets the line string into var --#
-	string_line=$(sed $number_line!d tmp_output_middle)
+	#-- Gets the line string with variable --#
+	line_string=$(sed $number_line!d tmp_output_middle)
+	line_string=$(echo $line_string | tr -d ' ')
 
-	#-- Gets the number of words into line --#
-	number_of_word=$(echo -e $string_line | wc -w)
+	#-- Gets the number of words in line --#
+	number_of_word=$(echo -e $line_string | wc -w)
 	number_of_word=$(echo -e $number_of_word | tr -d ' ')
 
 #-- Evry line, while you don't meet ';' --#
-	while [ "$string_line" != ";" ]
+	while [ "$line_string" != ";" ]
 	do
 		printf "          {" >> $file_output
 		#-- Every is output in file, excepted '|'  --#
-		for word in $string_line
+		for word in $line_string
 		do
 			(( number_of_word-- ))
 			#-- Condition for echap '|' --#
@@ -269,11 +292,12 @@ output_middle()
 		done
 		#-- Next line --#
 		(( number_line++ ))
-		string_line=$(sed $number_line!d tmp_output_middle)
-		number_of_word=$(echo -e $string_line | wc -w)
+		line_string=$(sed $number_line!d tmp_output_middle)
+		line_string=$(echo $line_string | tr -d ' ')
+		number_of_word=$(echo -e $line_string | wc -w)
 		number_of_word=$(echo -e $number_of_word | tr -d ' ')
 		#-- Condition for display ';' or not --#
-		if [ "$string_line" != ";"  ]; then
+		if [ "$line_string" != ";"  ]; then
 			printf "},\n" >> $file_output
 		else
 			printf "}\n" >> $file_output
@@ -282,7 +306,14 @@ output_middle()
 	rm tmp_output_middle
 }
 
-transform()
+get_first_word_of_line()
+{
+    #-- Gets the first line in the title (Its in the title ¯\_(ツ)_/¯) --#
+    ret=$(echo -e $1 | awk '{print $1;}')
+    echo -e $ret
+}
+
+output_3D_tab()
 {
     #-- Removes all the lines that starts with ';' or '|' --#
     grep -v "^\s*[|\;]\|^\s*$" $file_input_tmp > tmp
@@ -308,14 +339,17 @@ transform()
 	rm tmp
     #-- write it into the file --#
 }
+#########################################
+#########################################
+
+################################################################################
+################################################################################
+
+
 
 ################################################################################
 #                                 MAIN FUNCTION                                #
 ################################################################################
-
-
-
-
 
 #-- Initialisation of the global variables needed used by default--#
 path_of_file=`dirname $0`
@@ -380,16 +414,10 @@ cp $file_input $file_input_tmp
 parse_info
 needed_include=$(parse_includes)
 process_grammar
-process_numbers
-go_upper
-
-#-- Gets the number of grammar symbols (Counts the number of words where their line doesnt start with a '|' or a ';') --#
-nb_grammar=$(grep "^[^|;]" $file_input_tmp | wc -l)
-transform
 
 #-- Deletes temporary file --#
 rm $file_input_tmp
-rm *tmp*
+rm tmptokens
 exit 0
 
 
