@@ -329,6 +329,16 @@ if [ $# = 0 ] || [ $# -ge 5 ]; then
 	exit 1;
 fi
 
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--input") set -- "$@" "-i" ;;
+    "--output")   set -- "$@" "-o" ;;
+    *)        set -- "$@" "$arg" ;;
+  esac
+done
+
 #-- Parse the options given to the script --#
 while getopts ":i:o:h" option
 do
