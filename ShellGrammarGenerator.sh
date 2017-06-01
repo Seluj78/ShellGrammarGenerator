@@ -68,6 +68,12 @@ $path_of_file/resources/GSG_init.sh $file_input $file_output
 if [ $? != 0 ]; then
 	exit 1
 fi
+
+$path_of_file/resources/parser.sh $file_input
+if [ $? != 0 ]; then
+	rm $file_output
+	exit 1
+fi
 #-----------------------------#
 
 #-- Displays the startup message on the screen --#
