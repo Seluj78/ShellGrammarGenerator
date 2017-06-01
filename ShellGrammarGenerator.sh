@@ -93,7 +93,7 @@ $path_of_file/resources/GSG_Output3DArray.sh $file_input_tmp $file_output
 
 #-- Deletes temporary files --#
 rm tmptokens
-#rm examples/*tmp*
+rm $file_input_tmp
 #-----------------------------#
 
 
