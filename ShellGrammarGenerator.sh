@@ -65,6 +65,9 @@ done
 
 #-- Calls the init function --#
 $path_of_file/resources/GSG_init.sh $file_input $file_output
+if [ $? != 0 ]; then
+	exit 1
+fi
 #-----------------------------#
 
 #-- Displays the startup message on the screen --#
@@ -85,12 +88,12 @@ $path_of_file/resources/GSG_includeGen.sh $file_output $file_input_tmp
 $path_of_file/resources/GSG_RemoveInfo.sh $file_input_tmp
 $path_of_file/resources/GSG_ProcessNumbers.sh $file_input_tmp $file_output
 $path_of_file/resources/GSG_GoUpperCase.sh $file_input_tmp
-$path_of_file/resources/GSG_OutPut3DArray.sh $file_input_tmp $file_output
+$path_of_file/resources/GSG_Output3DArray.sh $file_input_tmp $file_output
 #---------#
 
 #-- Deletes temporary files --#
-rm *tmp*
-rm examples/*tmp*
+rm tmptokens
+#rm examples/*tmp*
 #-----------------------------#
 
 
