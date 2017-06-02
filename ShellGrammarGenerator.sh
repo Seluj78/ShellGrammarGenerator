@@ -15,7 +15,7 @@ file_input_tmp="$path_of_file/example/grammar.yacc.tmp"
 
 #-- If there's to many parameters or 0, then display help --#
 if [ $# = 0 ] || [ $# -ge 5 ]; then
-	$path_of_file/resources/GSG_help.sh
+	$path_of_file/resources/SGG_help.sh
 	exit 1;
 fi
 #-----------------------------------------------------------#
@@ -47,7 +47,7 @@ do
 			file_output=$OPTARG
 			;;
 		h)
-			$path_of_file/resources/GSG_help.sh
+			$path_of_file/resources/SGG_help.sh
 			exit 1;
 			;;
 		:)
@@ -64,12 +64,12 @@ done
 
 
 #-- Calls the init function --#
-$path_of_file/resources/GSG_init.sh $file_input $file_output
+$path_of_file/resources/SGG_init.sh $file_input $file_output
 if [ $? != 0 ]; then
 	exit 1
 fi
 
-$path_of_file/resources/parser.sh $file_input
+$path_of_file/resources/SGG_Parser.sh $file_input
 if [ $? != 0 ]; then
 	rm $file_output
 	exit 1
@@ -89,12 +89,12 @@ cp $file_input $file_input_tmp
 #-----------------------------------------------------#
 
 
-$path_of_file/resources/GSG_tokenhandler.sh $file_input_tmp
-$path_of_file/resources/GSG_includeGen.sh $file_output $file_input_tmp
-$path_of_file/resources/GSG_RemoveInfo.sh $file_input_tmp
-$path_of_file/resources/GSG_ProcessNumbers.sh $file_input_tmp $file_output
-$path_of_file/resources/GSG_GoUpperCase.sh $file_input_tmp
-$path_of_file/resources/GSG_Output3DArray.sh $file_input_tmp $file_output
+$path_of_file/resources/SGG_tokenhandler.sh $file_input_tmp
+$path_of_file/resources/SGG_includeGen.sh $file_output $file_input_tmp
+$path_of_file/resources/SGG_RemoveInfo.sh $file_input_tmp
+$path_of_file/resources/SGG_ProcessNumbers.sh $file_input_tmp $file_output
+$path_of_file/resources/SGG_GoUpperCase.sh $file_input_tmp
+$path_of_file/resources/SGG_Output3DArray.sh $file_input_tmp $file_output
 #---------#
 
 #-- Deletes temporary files --#
@@ -107,3 +107,5 @@ exit 0
 
 
 #TODO :make vars local if needed
+#TODO :Add comments handling
+#TODO: Obligatoire: si %fileincludename est la, alors doit avoir 1 word apres. sinon, il ne doit pas etre la et nom fichier.h par default
