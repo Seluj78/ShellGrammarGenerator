@@ -1,0 +1,4 @@
+script: bash ShellGrammarGenerator.sh --input examples/grammar.yacc.example --output grammar.c
+language: bash
+os: osx
+compiler: bash
