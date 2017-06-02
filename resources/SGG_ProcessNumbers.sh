@@ -42,10 +42,10 @@
     rm tmp tmp1 tmp2
 		#########################
 
-
+    count=$(cat count)
     #-- trims the trailing whitespaces --#
     max_comma=$(echo -e $max_comma | tr -d ' ')
     max_pipe=$(($max_pipe + 1))
 	#-- echo -ees into the file the numbers we got --#
 	echo -e >> $2
-	echo -e "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $2
+	echo -e "uint32_t    grammar[$count][$max_pipe][$max_comma]=" >> $2

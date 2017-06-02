@@ -26,7 +26,7 @@ enum e_token_type
 	E_TOKEN_MAX
 };
 
-typedef	uint32_t t_grammar_type;
+typedef	uint32_t    t_grammar_type;
 
 enum e_grammar_type
 {

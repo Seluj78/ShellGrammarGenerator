@@ -94,7 +94,7 @@ echo -e "##################################"
 echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 #------------------------------------------------#
 
-
+$path_of_file/resources/SGG_HeaderFileGen.sh $path_of_file $file_input_tmp $file_output $file_input
 $path_of_file/resources/SGG_tokenhandler.sh $file_input_tmp
 $path_of_file/resources/SGG_includeGen.sh $file_output $file_input_tmp
 $path_of_file/resources/SGG_RemoveInfo.sh $file_input_tmp
@@ -106,6 +106,7 @@ $path_of_file/resources/SGG_Output3DArray.sh $file_input_tmp $file_output
 #-- Deletes temporary files --#
 rm tmptokens
 rm $file_input_tmp
+rm count
 #-----------------------------#
 
 
