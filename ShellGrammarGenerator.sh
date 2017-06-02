@@ -94,7 +94,7 @@ echo -e "##################################"
 echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 #------------------------------------------------#
 
-
+$path_of_file/resources/SGG_Header_42.sh $file_output
 $path_of_file/resources/SGG_tokenhandler.sh $file_input_tmp
 $path_of_file/resources/SGG_includeGen.sh $file_output $file_input_tmp
 $path_of_file/resources/SGG_RemoveInfo.sh $file_input_tmp

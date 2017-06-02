@@ -48,4 +48,4 @@
     max_pipe=$(($max_pipe + 1))
 	#-- echo -ees into the file the numbers we got --#
 	echo -e >> $2
-	echo -e "uint32_t    grammar[][$max_pipe][$max_comma]=" >> $2
+	echo -e "uint32_t grammar[][$max_pipe][$max_comma] =" >> $2

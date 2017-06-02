@@ -48,7 +48,7 @@ output_middle()
 #-- Evry line, while you don't meet ';' --#
 	while [ "$line_string" != ";" ]
 	do
-		printf "          {" >> $3
+		printf "		{" >> $3
 		#-- Every is output in file, excepted '|'  --#
 		for word in $line_string
 		do
@@ -95,13 +95,13 @@ get_first_word_of_line()
     while read line
     do
         first=$(get_first_word_of_line $line)
-        echo -e "    [$first] =" >> $2
-        echo -e "        {" >> $2
+        echo -e "	[$first] " >> $2
+        echo -e "	{" >> $2
         output_middle $count $1 $2
         if [ $count != $nb ]; then
-            echo -e "        }," >> $2
+            echo -e "	}," >> $2
         else
-            echo -e "        }" >> $2
+            echo -e "	}" >> $2
         fi
         (( count++ ))
     done < tmp;
