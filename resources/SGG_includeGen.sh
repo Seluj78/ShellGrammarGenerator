@@ -30,7 +30,21 @@ parse_includes()
     echo -e $str
 }
 
+file_name="$3/enum.h"
+
+#-- Grabs the %tokentemplate line --#
+name=$(grep -i "%fileincludename" $4 | sed 's/[^ ]* //')
+
+if [ -z "$name" ]; then
+    echo "No %fileincludename provided. Going for enum.h"
+else
+    file_name="$name.h"
+fi #TODO: add theses lines to includeGen !
+
+
 needed_include=$(parse_includes $2)
+
+needed_include="$name.h $needed_include"
 #-- Prints all the includes --#
 for header in ${needed_include} ; do
 	echo -e "#include <$header>" >> $1
