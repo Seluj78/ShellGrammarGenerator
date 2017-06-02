@@ -1,8 +1,39 @@
-# ShellGrammarGenerator (SGG)
+#ShellGrammarGenerator (SGG for short)
+
+###This script converts a yacc file into a 3D array and some header files for a modular parser
+
+####Usage example:
+![alt text](https://github.com/seluj78/ShellGrammarGenerator/raw/master/examples/images/Usage.png "Logo Title Text 1")
 
 
 
-##### This shell script converts .yacc files into a parser friendly c file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #### Usage:
 
@@ -68,7 +99,7 @@ One
 %tokentemplate XXX
 ```
 
-#tokentemplatepasobligatoire
+#tokentemplatepasobligatoire    
 Which will result in this :
 ```bash
 %token WORD
