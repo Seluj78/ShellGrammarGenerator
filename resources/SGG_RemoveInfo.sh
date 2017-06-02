@@ -5,4 +5,6 @@
 	rm $1.bak
 	#-- Removes every blank line/line filled with whitespaces --#
 	sed -i.bak '/^$/d' $1
+
+	touch $1.bak
 	rm $1.bak

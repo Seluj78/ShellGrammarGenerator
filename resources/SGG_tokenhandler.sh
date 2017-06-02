@@ -28,4 +28,5 @@ token_templated=$(add_template $token $template)
 sed -i.bak 's/'"$token"'/'"$token_templated"'/g' $1
 (( count++ ))
 done < tmptokens
+touch $1.bak
 rm $1.bak
