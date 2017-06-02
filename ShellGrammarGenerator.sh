@@ -68,13 +68,24 @@ $path_of_file/resources/SGG_init.sh $file_input $file_output
 if [ $? != 0 ]; then
 	exit 1
 fi
+#-----------------------------#
 
-$path_of_file/resources/SGG_Parser.sh $file_input
+#-- Creates a copy of the input to modify it freely --#
+cp $file_input $file_input_tmp
+sed -i.bak '/^#/d' $file_input_tmp
+rm $file_input_tmp.bak
+cut -d'#' -f1 $file_input_tmp > tmpcomment
+cat tmpcomment > $file_input_tmp
+rm tmpcomment
+#-----------------------------------------------------#
+
+#-- Parse file input --#
+$path_of_file/resources/SGG_Parser.sh $file_input_tmp
 if [ $? != 0 ]; then
 	rm $file_output
 	exit 1
 fi
-#-----------------------------#
+#----------------------#
 
 #-- Displays the startup message on the screen --#
 echo -e "\n##################################"
@@ -82,11 +93,6 @@ echo -e "###   SHELL GRAMMAR GENERATOR  ###"
 echo -e "##################################"
 echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
 #------------------------------------------------#
-
-
-#-- Creates a copy of the input to modify it freely --#
-cp $file_input $file_input_tmp
-#-----------------------------------------------------#
 
 
 $path_of_file/resources/SGG_tokenhandler.sh $file_input_tmp
