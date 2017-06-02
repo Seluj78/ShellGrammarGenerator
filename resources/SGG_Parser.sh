@@ -122,7 +122,7 @@ percent_percent()
 	fi
 
 	if [ $(echo "$line" | wc -w) -gt 2 ]; then
-		echo "PARSER: (line=$line_parse) too many words after %fileincludename"
+		echo "PARSER: (line=$line_parse) too many words after %fileincludename" #TODO: FIX
 		exit 1
 	fi
 	(( line_parse++ ))
@@ -196,7 +196,7 @@ semili_at_the_end()
 		echo "PARSER: (line=$line_number) expected ';' (at the end of file)"
 		exit 1
 	fi
-}
+} #TODO: Fix that
 
 ################################################################################
 ################################################################################
@@ -230,3 +230,8 @@ fi
 process_parse
 echo "PARSER: OK"
 exit 0
+
+
+#TODO: If %tokentemplate found: Requires word after, else ok
+#TODO: Obligatoire: si %fileincludename est la, alors doit avoir 1 word apres. sinon, il ne doit pas etre la et nom fichier.h par default
+#TODO: %token pas obligatoire, mais si present: un mot derriere et donc %tokentemplate aussi
