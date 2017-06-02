@@ -20,15 +20,15 @@ percent_token()
 	do
 		if [ "${line:0:7}" != "%token" ] && [ "${line:0:7}" != "%token "  ]; then
 			break
-		elif [ $(echo "$line" | wc -w) -gt 2 ]; then
-			echo "PARSER: (line=$line_number) too many words after %token"
+		elif [ $(echo "$line" | wc -w) -ne 2 ]; then
+			echo "PARSER: (line=$line_parse) expected only one word after %token"
 			exit 1
 		fi
 		(( line_parse++ ))
 	done < $file_to_parse;
 
 	if [ "$(sed $line_parse!d $file_to_parse)" !=  "" ]; then
-		echo "PARSER: (line=$line_parse) expected  \n "
+		echo "PARSER: (line=$line_parse) expected  \n"
 		exit 1
 	fi
 	(( line_parse++ ))
@@ -92,13 +92,8 @@ percent_fileincludename()
 	local line
 	line=$(sed $line_parse!d $file_to_parse)
 
-	if [ "${line:0:16}" != "%fileincludename" ] && [ "${line:0:17}" != "%fileincludename " ]; then
-		echo "PARSER: (line=$line_parse) expected '%fileincludename'"
-		exit 1
-	fi
-
-	if [ $(echo "$line" | wc -w) -gt 2 ]; then
-		echo "PARSER: (line=$line_parse) too many words after %fileincludename"
+	if [ ! $(echo "$line" | wc -w) -eq 2 ]; then
+		echo "PARSER: (line=$line_parse) expected only one word after %fileincludename"
 		exit 1
 	fi
 	(( line_parse++ ))
@@ -122,7 +117,7 @@ percent_percent()
 	fi
 
 	if [ $(echo "$line" | wc -w) -gt 2 ]; then
-		echo "PARSER: (line=$line_parse) too many words after %fileincludename" #TODO: FIX
+		echo "PARSER: (line=$line_parse) too many words after %start"
 		exit 1
 	fi
 	(( line_parse++ ))
@@ -152,9 +147,18 @@ percent_percent()
 
 parse_process_percent()
 {
-	percent_token
-	percent_template
-	percent_fileincludename
+	line=$(sed $line_parse!d $file_to_parse)
+	if [ "${line:0:7}" = "%token" ] || [ "${line:0:7}" = "%token " ]; then
+		percent_token
+		percent_template
+	elif [ "${line:0:15}" = "%tokentemplate" ] || [ "${line:0:15}" = "%tokentemplate " ]; then
+		echo "PARSER: (line=$line_parse) not expected without '%token'"
+		exit 1
+	fi
+	line=$(sed $line_parse!d $file_to_parse)
+	if [ "${line:0:16}" = "%fileincludename" ] || [ "${line:0:17}" = "%fileincludename " ]; then
+		percent_fileincludename
+	fi
 	percent_include
 	percent_percent
 }
@@ -183,6 +187,12 @@ no_white_space()
 		fi
 		(( line_number-- ))
 	done
+	line_number=1
+	line=$(sed $line_number!d $file_to_parse)
+	if [ $(echo "$line" | wc -w) -eq 0 ]; then
+		echo "PARSER: (line=$line_number) expected word(s)"
+		exit 1
+	fi
 }
 
 semili_at_the_end()
@@ -193,10 +203,15 @@ semili_at_the_end()
 	line_number=$(echo -e $line_number | tr -d ' ')
 	line=$(sed $line_number!d $file_to_parse)
 	if [ "$line" != ";" ]; then
-		echo "PARSER: (line=$line_number) expected ';' (at the end of file)"
-		exit 1
+		(( line_number++ ))
+		line_number=$(echo -e $line_number | tr -d ' ')
+		line=$(sed $line_number!d $file_to_parse)
+		if [ "$line" != ";" ]; then
+			echo "PARSER: (line=$line_number) expected ';' (at the end of file)"
+			exit 1
+		fi
 	fi
-} #TODO: Fix that
+}
 
 ################################################################################
 ################################################################################
@@ -230,8 +245,3 @@ fi
 process_parse
 echo "PARSER: OK"
 exit 0
-
-
-#TODO: If %tokentemplate found: Requires word after, else ok
-#TODO: Obligatoire: si %fileincludename est la, alors doit avoir 1 word apres. sinon, il ne doit pas etre la et nom fichier.h par default
-#TODO: %token pas obligatoire, mais si present: un mot derriere et donc %tokentemplate aussi
