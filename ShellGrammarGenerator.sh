@@ -91,7 +91,7 @@ fi
 echo -e "\n##################################"
 echo -e "###   SHELL GRAMMAR GENERATOR  ###"
 echo -e "##################################"
-echo -e "\n\033[4;1minput:\033[0m \"$file_input\"\n\033[4;1moutput:\033[0m \"$file_output\""
+echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $file_input)\"\n\033[4;1moutput:\033[0m \"$(basename $file_input)\""
 #------------------------------------------------#
 
 $path_of_file/resources/SGG_HeaderFileGen.sh $path_of_file $file_input_tmp $file_output $file_input
