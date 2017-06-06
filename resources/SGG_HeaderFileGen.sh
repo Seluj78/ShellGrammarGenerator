@@ -29,14 +29,14 @@ echo >> $file_name
 
 
 #TODO : make this line optional and modular
-echo "typedef uint32_t	t_token_type;" >> $file_name
+echo -e "typedef uint32_t\tt_token_type;" >> $file_name
 
 
 
 echo >> $file_name
-echo "enum e_token_type" >> $file_name
+echo -e "enum\te_token_type" >> $file_name
 echo "{" >> $file_name
-echo -e " \tE_TOKEN_NONE,
+echo -e "\tE_TOKEN_NONE,
 	E_TOKEN_BLANK,
 	E_TOKEN_NEWLINE,
 	E_TOKEN_WORD,
@@ -60,10 +60,10 @@ echo >> $file_name
 
 
 #TODO : make this line optional and modular
-echo "typedef	uint32_t    t_grammar_type;" >> $file_name
+echo -e "typedef	uint32_t\tt_grammar_type;" >> $file_name
 
 echo >> $file_name
-echo "enum e_grammar_type" >> $file_name
+echo -e "enum\te_grammar_type" >> $file_name
 echo "{" >> $file_name
 echo -e "\tE_GM_NONE = 200," >> $file_name
     count=201
@@ -107,4 +107,4 @@ echo $count > count
 
 
 echo >> $file_name
-echo "# endif" >> $file_name
+echo "#endif" >> $file_name
