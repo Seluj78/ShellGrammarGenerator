@@ -95,7 +95,7 @@ get_first_word_of_line()
     while read line
     do
         first=$(get_first_word_of_line $line)
-        echo -e "	[$first]" >> $2
+        echo -e "	[$first] =" >> $2
         echo -e "	{" >> $2
         output_middle $count $1 $2
         if [ $count != $nb ]; then

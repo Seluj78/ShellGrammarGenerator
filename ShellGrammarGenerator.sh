@@ -8,8 +8,8 @@
 #-- Initialisation of the global variables needed used by default--#
 path_of_file=`dirname $0`
 file_output="$path_of_file/grammar.c"
-file_input="$path_of_file/example/grammar.yacc.example"
-file_input_tmp="$path_of_file/example/grammar.yacc.tmp"
+file_input="$path_of_file/examples/grammar.yacc.example"
+file_input_tmp="$path_of_file/examples/grammar.yacc.tmp"
 #------------------------------------------------------------------#
 
 
