@@ -1,39 +1,10 @@
 #ShellGrammarGenerator (SGG for short)
 
-###This script converts a yacc file into a 3D array and some header files for a modular parser
+###This script converts a yacc file into a 3D array and a header file for a modular C parser
 
-####Usage example:
-![alt text](https://github.com/seluj78/ShellGrammarGenerator/raw/master/examples/images/Usage.png "Logo Title Text 1")
+####SGG Usage example:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[![asciicast](https://asciinema.org/a/65nymkq3pw2n61v354kz2ezo6.png)](https://asciinema.org/a/65nymkq3pw2n61v354kz2ezo6)
 
 #### Usage:
 
