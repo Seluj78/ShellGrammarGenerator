@@ -19,7 +19,7 @@ echo "/*                                                                        
 echo "/*                                                        :::      ::::::::   */" >> $1
 echo -n "/*   " >> $1
 echo -n "$name" >> $1
-output_space $name
+output_space $1
 echo ":+:      :+:    :+:   */" >> $1
 echo "/*                                                    +:+ +:+         +:+     */" >> $1
 echo "/*   By: SSG <SSG@42.fr>                            +#+  +:+       +#+        */" >> $1
