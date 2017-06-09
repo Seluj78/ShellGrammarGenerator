@@ -9,8 +9,6 @@
 
 %tokentemplate E_TOKEN_
 
-%fileincludename enum
-
 %include parser/parser.h
 %include stdint.h
 

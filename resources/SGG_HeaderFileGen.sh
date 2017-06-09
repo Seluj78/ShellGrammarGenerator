@@ -1,41 +1,29 @@
 #!/bin/bash
 
-path_of_file=$1
-file_input_tmp=$2
-file_output=$3
-file_input=$4
+$EXEC_PATH/resources/SGG_Header_42.sh $H_OUTPUT
 
-file_name="$path_of_file/enum.h"
-$path_of_file/resources/SGG_Header_42.sh $file_name
-
-#-- Grabs the %tokentemplate line --#
-name=$(grep -i "%fileincludename" $file_input | sed 's/[^ ]* //')
-
-if [ -f "$name" ]; then
-    file_name="$name.h"
-fi #TODO: add theses lines to includeGen !
-echo -e "\n\033[4;1moutput header:\033[0m \"$(basename $file_name)\"\n"
+name=$(basename $H_OUTPUT)
 
 name_upper=$(echo $name | tr "a-z" "A-Z" )
 
-touch $file_name
+touch $H_OUTPUT
 
-echo -n "#ifndef $name_upper" >> $file_name
-echo "_H" >> $file_name
-echo -n "# define $name_upper" >> $file_name
-echo "_H" >> $file_name
-echo >> $file_name
+echo -n "#ifndef $name_upper" >> $H_OUTPUT
+echo "_H" >> $H_OUTPUT
+echo -n "# define $name_upper" >> $H_OUTPUT
+echo "_H" >> $H_OUTPUT
+echo >> $H_OUTPUT
 
 
 
 #TODO : make this line optional and modular
-echo -e "typedef uint32_t\tt_token_type;" >> $file_name
+echo -e "typedef uint32_t\tt_token_type;" >> $H_OUTPUT
 
 
 
-echo >> $file_name
-echo -e "enum\te_token_type" >> $file_name
-echo "{" >> $file_name
+echo >> $H_OUTPUT
+echo -e "enum\te_token_type" >> $H_OUTPUT
+echo "{" >> $H_OUTPUT
 echo -e "\tE_TOKEN_NONE,
 	E_TOKEN_BLANK,
 	E_TOKEN_NEWLINE,
@@ -54,23 +42,23 @@ echo -e "\tE_TOKEN_NONE,
 	E_TOKEN_AND_IF,
 	E_TOKEN_LESSAND,
 	E_TOKEN_GREATAND,
-	E_TOKEN_MAX" >> $file_name
-echo "};" >> $file_name
-echo >> $file_name
+	E_TOKEN_MAX" >> $H_OUTPUT
+echo "};" >> $H_OUTPUT
+echo >> $H_OUTPUT
 
 
 #TODO : make this line optional and modular
-echo -e "typedef	uint32_t\tt_grammar_type;" >> $file_name
+echo -e "typedef	uint32_t\tt_grammar_type;" >> $H_OUTPUT
 
-echo >> $file_name
-echo -e "enum\te_grammar_type" >> $file_name
-echo "{" >> $file_name
-echo -e "\tE_GM_NONE = 200," >> $file_name
+echo >> $H_OUTPUT
+echo -e "enum\te_grammar_type" >> $H_OUTPUT
+echo "{" >> $H_OUTPUT
+echo -e "\tE_GM_NONE = 200," >> $H_OUTPUT
     count=201
-    grep -i ":" $file_input_tmp | cut -f1 -d":" | tr "a-z" "A-Z" > tmp
+    grep -i ":" $INPUT_TMP | cut -f1 -d":" | tr "a-z" "A-Z" > tmp
     while read line
     do
-        echo -e "\tE_""$line"" = $count," >> $file_name
+        echo -e "\tE_""$line"" = $count," >> $H_OUTPUT
         (( count++ ))
     done < tmp
     rm tmp
@@ -99,12 +87,12 @@ echo -e "\tE_GM_NONE = 200," >> $file_name
 	#E_SEPARATOR = 222,
 	#E_SEQUENTIAL_SEP = 223,
 	#
-	echo -e "\tE_GM_END = $count" >> $file_name
-echo "};" >> $file_name
+	echo -e "\tE_GM_END = $count" >> $H_OUTPUT
+echo "};" >> $H_OUTPUT
 
 echo $count > count
 
 
 
-echo >> $file_name
-echo "#endif" >> $file_name
+echo >> $H_OUTPUT
+echo "#endif" >> $H_OUTPUT

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\nUsage:  ./ShellGrammarConverter.sh [input_file] [desired_output_file.h]"
+echo -e "Usage:  ./ShellGrammarConverter.sh [input_file] [desired_output_file.h]"
 echo -e "\t\033[1;mExample: ./ShellGrammarConverter.sh -i grammar.file -o grammar.h\033[0m"
 echo -e
 echo -e "\t\033[1m-i --input\033[0m  (required), used to specify the grammar file (in yacc format). If not set, will display an error"

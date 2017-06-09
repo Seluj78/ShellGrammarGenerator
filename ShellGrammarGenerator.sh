@@ -113,7 +113,3 @@ rm count
 
 exit 0
 
-
-#TODO :make vars local if needed
-#TODO :Add comments handling
-#TODO: Obligatoire: si %fileincludename est la, alors doit avoir 1 word apres. sinon, il ne doit pas etre la et nom fichier.h par default
