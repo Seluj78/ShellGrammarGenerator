@@ -1,25 +1,19 @@
 #!/bin/bash
 
-################################################################################
-#                            ShellGrammarConverter                             #
-################################################################################
-
-
-#-- Initialisation of the global variables needed used by default--#
-path_of_file=`dirname $0`
-file_output="$path_of_file/grammar.c"
-file_input="$path_of_file/examples/grammar.yacc.example"
-file_input_tmp="$path_of_file/examples/grammar.yacc.tmp"
-#------------------------------------------------------------------#
-
+#-- Gets where the shell script is --#
+export EXEC_PATH=`dirname $0`
+#-- Sets the default output --#
+export C_OUTPUT="$EXEC_PATH/grammar.c"
+export H_OUTPUT="$EXEC_PATH/enum.h"
+export INPUT_TMP="$EXEC_PATH/examples/grammar.yacc.tmp"
+#-- Sets the default input --#
+export INPUT="$EXEC_PATH/examples/grammar.yacc.example"
 
 #-- If there's to many parameters or 0, then display help --#
-if [ $# = 0 ] || [ $# -ge 5 ]; then
-	$path_of_file/resources/SGG_help.sh
+if [ $# = 0 ] || [ $# -ge 7 ]; then
+	$EXEC_PATH/resources/SGG_help.sh
 	exit 1;
 fi
-#-----------------------------------------------------------#
-
 
 #-- This module converts the long arguments into shorter ones for getopt --#
 for arg in "$@"; do
@@ -31,23 +25,23 @@ for arg in "$@"; do
     *)        set -- "$@" "$arg" ;;
   esac
 done
-#--------------------------------------------------------------------------#
-
 
 
 #-- Parses the options given to the script --#
-while getopts ":i:o:h" option
+while getopts ":i:o:hH:" option
 do
 	case $option in
 		i)
-			file_input=$OPTARG
-			file_input_tmp=$file_input.tmp
+			export INPUT="$OPTARG"
 			;;
 		o)
-			file_output=$OPTARG
+			export C_OUTPUT="$OPTARG"
 			;;
+		H)
+		    export H_OUTPUT="$OPTARG"
+		    ;;
 		h)
-			$path_of_file/resources/SGG_help.sh
+			$EXEC_PATH/resources/SGG_help.sh
 			exit 1;
 			;;
 		:)
@@ -60,56 +54,34 @@ do
 			;;
 	esac
 done
-#--------------------------------------------#
 
-
-#-- Calls the init function --#
-$path_of_file/resources/SGG_init.sh $file_input $file_output $path_of_file
+$EXEC_PATH/resources/SGG_init.sh
 if [ $? != 0 ]; then
 	exit 1
 fi
-#-----------------------------#
 
-#-- Creates a copy of the input to modify it freely --#
-cp $file_input $file_input_tmp
-sed -i.bak '/^#/d' $file_input_tmp
-rm $file_input_tmp.bak
-cut -d'#' -f1 $file_input_tmp > tmpcomment
-cat tmpcomment > $file_input_tmp
+cp $INPUT $INPUT_TMP
+sed -i.bak '/^#/d' $INPUT_TMP
+rm $INPUT_TMP.bak
+cut -d'#' -f1 $INPUT_TMP > tmpcomment
+cat tmpcomment > $INPUT_TMP
 rm tmpcomment
-#-----------------------------------------------------#
-
-#-- Parse file input --#
-$path_of_file/resources/SGG_Parser.sh $file_input_tmp
-if [ $? != 0 ]; then
-	rm $file_output
-	exit 1
-fi
-#----------------------#
 
 #-- Displays the startup message on the screen --#
 echo -e "\n##################################"
 echo -e "###   SHELL GRAMMAR GENERATOR  ###"
 echo -e "##################################"
-echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $file_input)\"\n\033[4;1moutput:\033[0m \"$(basename $file_output)\""
-#------------------------------------------------#
+echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $INPUT)\"\n\033[4;1moutput:\033[0m \"$(basename $C_OUTPUT)\" && \"$(basename $H_OUTPUT)\""
 
-$path_of_file/resources/SGG_HeaderFileGen.sh $path_of_file $file_input_tmp $file_output $file_input
-$path_of_file/resources/SGG_Header_42.sh $file_output
-$path_of_file/resources/SGG_tokenhandler.sh $file_input_tmp
-$path_of_file/resources/SGG_includeGen.sh $file_output $file_input_tmp $path_of_file $file_input
-$path_of_file/resources/SGG_RemoveInfo.sh $file_input_tmp
-$path_of_file/resources/SGG_ProcessNumbers.sh $file_input_tmp $file_output
-$path_of_file/resources/SGG_GoUpperCase.sh $file_input_tmp
-$path_of_file/resources/SGG_Output3DArray.sh $file_input_tmp $file_output
-#---------#
+$EXEC_PATH/resources/SGG_HeaderFileGen.sh
+$EXEC_PATH/resources/SGG_tokenhandler.sh
+$EXEC_PATH/resources/SGG_includeGen.sh
+$EXEC_PATH/resources/SGG_RemoveInfo.sh
+$EXEC_PATH/resources/SGG_ProcessNumbers.sh
+$EXEC_PATH/resources/SGG_GoUpperCase.sh
+$EXEC_PATH/resources/SGG_Output3DArray.sh
 
-#-- Deletes temporary files --#
 rm tmptokens
-rm $file_input_tmp
 rm count
-#-----------------------------#
-
-
+rm $INPUT_TMP
 exit 0
-

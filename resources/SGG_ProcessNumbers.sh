@@ -18,13 +18,13 @@
             fi
             actual=0
         fi
-    done < $1;
+    done < $INPUT_TMP;
 		#########################
 
 
 		### SET/GET MAX_COMMA ###
     #-- save 1 in tmp --#
-    cat $1 > tmp
+    cat $INPUT_TMP > tmp
 
     #-- Cuts everything before : and then the first char of every line --#
     cut -d':' -f2 tmp > tmp1
@@ -47,5 +47,5 @@
     max_comma=$(echo -e $max_comma | tr -d ' ')
     max_pipe=$(($max_pipe + 1))
 	#-- echo -ees into the file the numbers we got --#
-	echo -e >> $2
-	echo -e "uint32_t    grammar[$count][$max_pipe][$max_comma]=" >> $2
+	echo -e >> $C_OUTPUT
+	echo -e "uint32_t    grammar[$count][$max_pipe][$max_comma]=" >> $C_OUTPUT

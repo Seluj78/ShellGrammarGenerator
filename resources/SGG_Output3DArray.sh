@@ -86,8 +86,8 @@ get_first_word_of_line()
 }
 
     #-- Removes all the lines that starts with ';' or '|' --#
-    grep -v "^\s*[|\;]\|^\s*$" $1 > tmp
-    echo -e "{" >> $2
+    grep -v "^\s*[|\;]\|^\s*$" $INPUT_TMP > tmp
+    echo -e "{" >> $C_OUTPUT
 
     nb=$(cat tmp | wc -l)
     #-- Loops in the tmp file --#
@@ -95,16 +95,16 @@ get_first_word_of_line()
     while read line
     do
         first=$(get_first_word_of_line $line)
-        echo -e "	[$first] =" >> $2
-        echo -e "	{" >> $2
-        output_middle $count $1 $2
+        echo -e "	[$first] =" >> $C_OUTPUT
+        echo -e "	{" >> $C_OUTPUT
+        output_middle $count $INPUT_TMP $C_OUTPUT
         if [ $count != $nb ]; then
-            echo -e "	}," >> $2
+            echo -e "	}," >> $C_OUTPUT
         else
-            echo -e "	}" >> $2
+            echo -e "	}" >> $C_OUTPUT
         fi
         (( count++ ))
     done < tmp;
-    echo -e "};" >> $2
+    echo -e "};" >> $C_OUTPUT
 	rm tmp
     #-- write it into the file --#
