@@ -60,7 +60,7 @@ echo -e "\tE_GM_NONE = 200," >> $H_OUTPUT
     grep -i ":" $INPUT_TMP | cut -f1 -d":" | tr "a-z" "A-Z" > tmp
     while read line
     do
-        echo -e "\tE_""$line"" = $count," >> $H_OUTPUT
+        echo -e "\t""$line"" = $count," >> $H_OUTPUT
         (( count++ ))
     done < tmp
     rm tmp
