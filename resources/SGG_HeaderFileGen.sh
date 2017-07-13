@@ -14,6 +14,7 @@ echo -n "#ifndef $name_upper" >> $H_OUTPUT
 echo "_H" >> $H_OUTPUT
 echo -n "# define $name_upper" >> $H_OUTPUT
 echo "_H" >> $H_OUTPUT
+echo "# include <stdint.h>" >> $H_OUTPUT
 echo >> $H_OUTPUT
 
 
