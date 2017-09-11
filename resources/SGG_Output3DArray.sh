@@ -62,6 +62,9 @@ output_middle()
 					printf $word >> $3
 				fi
 			fi
+			if [[ $word = "|" ]] && [[ $number_of_word = 0 ]]; then
+				printf "E_EMPTY_GRAM" >> $3
+			fi
 		done
 		#-- Next line --#
 		(( number_line++ ))
