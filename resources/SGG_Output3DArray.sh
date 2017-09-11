@@ -1,4 +1,7 @@
 #!/bin/bash
+grep -i "%tokentemplate" $INPUT > tmp2
+template=$(sed 's/[^ ]* //' tmp2)
+rm tmp2
 
 #-- Gets the Nth ';' --#
 get_line_n_semili()
@@ -57,13 +60,13 @@ output_middle()
 			if [ $word != "|" ]; then
 				#-- Condition for display ',' or not --#
 				if [ ! $number_of_word = 0 ]; then
-					printf $word", " >> $3
+					printf "$template"$word", " >> $3
 				else
-					printf $word >> $3
+					printf "$template"$word >> $3
 				fi
 			fi
 			if [[ $word = "|" ]] && [[ $number_of_word = 0 ]]; then
-				printf "E_EMPTY_GRAM" >> $3
+				printf "$template""EMPTY" >> $3
 			fi
 		done
 		#-- Next line --#
@@ -98,7 +101,7 @@ get_first_word_of_line()
     while read line
     do
         first=$(get_first_word_of_line $line)
-        echo -e "	[$first] =" >> $C_OUTPUT
+        echo -e "	[$template$first] =" >> $C_OUTPUT
         echo -e "	{" >> $C_OUTPUT
         output_middle $count $INPUT_TMP $C_OUTPUT
         if [ $count != $nb ]; then

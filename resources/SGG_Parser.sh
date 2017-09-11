@@ -241,7 +241,7 @@ line_parse=1
 ################################################################################
 
 
-if test ${line_parse##*.} != "yacc"; then
+if test $(echo $file_to_parse |awk -F . '{if (NF>1) {print $NF}}') != "yacc"; then
 	echo -e "\033[1;31;4mWARNING:\033[0m \033[1mIt is not a .yacc\033[0m"
 fi
 
