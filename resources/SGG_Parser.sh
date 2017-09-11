@@ -20,9 +20,9 @@ percent_token()
 	do
 		if [ "${line:0:7}" != "%token" ] && [ "${line:0:7}" != "%token "  ]; then
 			break
-		elif [ $(echo "$line" | wc -w) -ne 2 ]; then
-			echo "PARSER: (line=$line_parse) expected only one word after %token"
-			exit 1
+		#elif [ $(echo "$line" | wc -w) -ne 2 ]; then
+			#echo "PARSER: (line=$line_parse) expected only one word after %token"
+			#exit 1
 		fi
 		(( line_parse++ ))
 	done < $file_to_parse;
@@ -234,7 +234,7 @@ process_parse()
 #                            VARIABLE GLOBALS                                  #
 ################################################################################
 
-file_to_parse=$1
+file_to_parse=$INPUT
 line_parse=1
 
 ################################################################################

@@ -73,6 +73,11 @@ echo -e "###   SHELL GRAMMAR GENERATOR  ###"
 echo -e "##################################"
 echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $INPUT)\"\n\033[4;1moutput:\033[0m \"$(basename $C_OUTPUT)\" && \"$(basename $H_OUTPUT)\""
 
+echo -e "\n"
+$EXEC_PATH/resources/SGG_Parser.sh
+if [[ $? != 0 ]]; then
+	exit 1
+fi
 $EXEC_PATH/resources/SGG_HeaderFileGen.sh
 $EXEC_PATH/resources/SGG_tokenhandler.sh
 $EXEC_PATH/resources/SGG_includeGen.sh
