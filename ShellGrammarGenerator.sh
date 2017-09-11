@@ -80,6 +80,7 @@ $EXEC_PATH/resources/SGG_RemoveInfo.sh
 $EXEC_PATH/resources/SGG_ProcessNumbers.sh
 $EXEC_PATH/resources/SGG_GoUpperCase.sh
 $EXEC_PATH/resources/SGG_Output3DArray.sh
+$EXEC_PATH/resources/SGG_Replace_token.sh
 
 rm tmptokens
 rm count
