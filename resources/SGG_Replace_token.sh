@@ -14,15 +14,13 @@ while [[ $(echo -e $line_string | awk '{print $1;}') = "%token" ]]; do
   number_of_word=$(echo -e $line_string | wc -w)
   number_of_word=$(echo -e $number_of_word | tr -d ' ')
 
-  echo "$line_string"
   old=$(echo $line_string | sed 's/.*://')
   new=${line_string%:*}
   new=$(echo $new| tr -d '%token ')
   for word in $old
   do
-      echo "$new = $word"
     if [[ $word != "," ]]; then
-      sed -i "s/$(echo "'$word'")/$(echo "$template$new")/g" "$C_OUTPUT"
+      sed -i "s/$(echo "'$word'")/$(echo "$new")/g" "$C_OUTPUT"
     fi
     (( number_of_word-- ))
   done
