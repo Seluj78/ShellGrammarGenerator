@@ -65,6 +65,7 @@ echo -e "\tE_GM_NONE = 200," >> $H_OUTPUT
         (( count++ ))
     done < tmp
     rm tmp
+		sed -i.bak '/^	%TOKEN/d' $H_OUTPUT
 	echo -e "\tE_GM_END = $count" >> $H_OUTPUT
 echo "};" >> $H_OUTPUT
 
