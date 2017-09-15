@@ -60,9 +60,9 @@ output_middle()
 			if [ $word != "|" ]; then
 				#-- Condition for display ',' or not --#
 				if [ ! $number_of_word = 0 ]; then
-					printf "$template"$word", " >> $3
+					printf "E_GRAM_"$word", " >> $3
 				else
-					printf "$template"$word >> $3
+					printf "E_GRAM_"$word >> $3
 				fi
 			fi
 			if [[ $word = "|" ]] && [[ $number_of_word = 0 ]]; then

@@ -27,3 +27,23 @@ while [[ $(echo -e $line_string | awk '{print $1;}') = "%token" ]]; do
 
     (( nb_line++ ))
 done
+
+nb_line=1
+line_string=$(sed $nb_line!d $INPUT)
+while [[ $(echo -e $line_string | awk '{print $1;}') = "%token" ]]; do
+  #-- Gets the line string with variable --#
+  line_string=$(sed $nb_line!d $INPUT)
+
+  new=${line_string%:*}
+  new=$(echo $new| tr -d '%token ')
+  if [[ -n $new ]]; then
+  old="E_GRAM_$new"
+  new="$template$new"
+  sed -i "s/{$old, /{$new, /g" $C_OUTPUT
+  sed -i "s/, $old, /, $new, /g" $C_OUTPUT
+  sed -i "s/, $old}/, $new}/g" $C_OUTPUT
+  sed -i "s/{$old}/{$new}/g" $C_OUTPUT
+
+fi
+    (( nb_line++ ))
+done

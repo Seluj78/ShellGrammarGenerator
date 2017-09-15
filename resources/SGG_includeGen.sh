@@ -39,5 +39,9 @@ needed_include=$(parse_includes $INPUT_TMP)
 needed_include="$name.h $needed_include"
 #-- Prints all the includes --#
 for header in ${needed_include} ; do
-	echo -e "#include <$header>" >> $C_OUTPUT
+  if [[ "$header" != "enum.h" ]]; then
+	   echo -e "#include <$header>" >> $C_OUTPUT
+  else
+    echo -e "#include <parser/$header>" >> $C_OUTPUT
+  fi
 done

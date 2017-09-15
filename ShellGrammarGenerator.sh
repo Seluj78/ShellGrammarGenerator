@@ -90,5 +90,4 @@ $EXEC_PATH/resources/SGG_Replace_token.sh
 rm tmptokens
 rm count
 rm $INPUT_TMP
-rm "$H_OUTPUT".bak
 exit 0

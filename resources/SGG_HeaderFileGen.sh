@@ -56,17 +56,18 @@ echo -e "typedef	uint32_t\tt_grammar_type;" >> $H_OUTPUT
 echo >> $H_OUTPUT
 echo -e "enum\te_grammar_type" >> $H_OUTPUT
 echo "{" >> $H_OUTPUT
-echo -e "\tE_GM_NONE = 200," >> $H_OUTPUT
+echo -e "\tE_GRAM_NONE = 200," >> $H_OUTPUT
     count=201
     grep -i ":" $INPUT_TMP | cut -f1 -d":" | tr "a-z" "A-Z" > tmp
     while read line
     do
-        echo -e "\t""$line"" = $count," >> $H_OUTPUT
-        (( count++ ))
+			if [[ !("$line" =~ "%TOKEN") ]]; then
+        echo -e "\t""E_GRAM_$line"" = $count," >> $H_OUTPUT
+				let "count++"
+			fi
     done < tmp
     rm tmp
-		sed -i.bak '/^	%TOKEN/d' $H_OUTPUT
-	echo -e "\tE_GM_END = $count" >> $H_OUTPUT
+	echo -e "\tE_GRAM_END = $count" >> $H_OUTPUT
 echo "};" >> $H_OUTPUT
 
 echo $count > count

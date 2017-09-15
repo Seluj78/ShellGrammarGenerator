@@ -1,122 +1,136 @@
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_grammar.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: SSG <SSG@42.fr>                            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/09/14 12:41:22 by SSG               #+#    #+#             */
+/*   Updated: 2017/09/14 12:41:22 by SSG              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <parser/enum.h>
 #include <parser/parser.h>
 #include <stdint.h>
 
-uint32_t	grammar[230][6][4]=
+uint32_t    grammar[224][6][4]=
 {
-	[PROGRAM] =
-		{
-			{LINEBREAK, COMPLETE_COMMANDS, LINEBREAK},
-			{LINEBREAK}
-		},
-	[COMPLETE_COMMANDS] =
-		{
-			{COMPLETE_COMMANDS, NEWLINE_LIST, COMPLETE_COMMAND},
-			{COMPLETE_COMMAND}
-		},
-	[COMPLETE_COMMAND] =
-		{
-			{LIST, SEPARATOR_OP},
-			{LIST}
-		},
-	[LIST] =
-		{
-			{LIST, SEPARATOR_OP, AND_OR},
-			{AND_OR}
-		},
-	[AND_OR] =
-		{
-			{PIPELINE}
-		},
-	[PIPELINE] =
-		{
-			{PIPE_SEQUENCE}
-		},
-	[PIPE_SEQUENCE] =
-		{
-			{COMMAND},
-			{PIPE_SEQUENCE, '|', LINEBREAK, COMMAND}
-		},
-	[COMMAND] =
-		{
-			{SIMPLE_COMMAND}
-		},
-	[SIMPLE_COMMAND] =
-		{
-			{CMD_PREFIX, CMD_WORD, CMD_SUFFIX},
-			{CMD_PREFIX, CMD_WORD},
-			{CMD_PREFIX},
-			{CMD_NAME, CMD_SUFFIX},
-			{CMD_NAME}
-		},
-	[CMD_NAME] =
-		{
-			{E_TOKEN_WORD}
-		},
-	[CMD_WORD] =
-		{
-			{E_TOKEN_WORD}
-		},
-	[CMD_PREFIX] =
-		{
-			{IO_REDIRECT},
-			{CMD_PREFIX, IO_REDIRECT}
-		},
-	[CMD_SUFFIX] =
-		{
-			{IO_REDIRECT},
-			{CMD_SUFFIX, IO_REDIRECT},
-			{E_TOKEN_WORD},
-			{CMD_SUFFIX, E_TOKEN_WORD}
-		},
-	[IO_REDIRECT] =
-		{
-			{IO_FILE},
-			{E_TOKEN_IO_NUMBER, IO_FILE},
-			{IO_HERE},
-			{E_TOKEN_IO_NUMBER, IO_HERE}
-		},
-	[IO_FILE] =
-		{
-			{'<', FILENAME},
-			{E_TOKEN_LESSAND, FILENAME},
-			{'>', FILENAME},
-			{E_TOKEN_GREATAND, FILENAME},
-			{E_TOKEN_DGREAT, FILENAME},
-			{E_TOKEN_LESSGREAT, FILENAME}
-		},
-	[FILENAME] =
-		{
-			{E_TOKEN_WORD}
-		},
-	[IO_HERE] =
-		{
-			{E_TOKEN_DLESS, HERE_END}
-		},
-	[HERE_END] =
-		{
-			{E_TOKEN_WORD}
-		},
-	[NEWLINE_LIST] =
-		{
-			{E_TOKEN_NEWLINE},
-			{NEWLINE_LIST, E_TOKEN_NEWLINE}
-		},
-	[LINEBREAK] =
-		{
-			{NEWLINE_LIST}
-		},
-	[SEPARATOR_OP] =
-		{
-			{';'}
-		},
-	[SEPARATOR] =
-		{
-			{SEPARATOR_OP, LINEBREAK},
-			{NEWLINE_LIST}
-		},
-	[SEQUENTIAL_SEP] =
-		{
-			{';', LINEBREAK},
-			{NEWLINE_LIST}
-		}
+	[E_GRAM_PROGRAM] =
+	{
+		{E_GRAM_LINEBREAK, E_GRAM_COMPLETE_COMMANDS, E_GRAM_LINEBREAK},
+		{E_GRAM_LINEBREAK}
+	},
+	[E_GRAM_COMPLETE_COMMANDS] =
+	{
+		{E_GRAM_COMPLETE_COMMANDS, E_GRAM_NEWLINE_LIST, E_GRAM_COMPLETE_COMMAND},
+		{E_GRAM_COMPLETE_COMMAND}
+	},
+	[E_GRAM_COMPLETE_COMMAND] =
+	{
+		{E_GRAM_LIST, E_GRAM_SEPARATOR_OP},
+		{E_GRAM_LIST}
+	},
+	[E_GRAM_LIST] =
+	{
+		{E_GRAM_LIST, E_GRAM_SEPARATOR_OP, E_GRAM_AND_OR},
+		{E_GRAM_AND_OR}
+	},
+	[E_GRAM_AND_OR] =
+	{
+		{E_GRAM_PIPELINE}
+	},
+	[E_GRAM_PIPELINE] =
+	{
+		{E_GRAM_PIPE_SEQUENCE}
+	},
+	[E_GRAM_PIPE_SEQUENCE] =
+	{
+		{E_GRAM_COMMAND},
+		{E_GRAM_PIPE_SEQUENCE, E_TOKEN_PIPE, E_GRAM_LINEBREAK, E_GRAM_COMMAND}
+	},
+	[E_GRAM_COMMAND] =
+	{
+		{E_GRAM_SIMPLE_COMMAND}
+	},
+	[E_GRAM_SIMPLE_COMMAND] =
+	{
+		{E_GRAM_CMD_PREFIX, E_GRAM_CMD_WORD, E_GRAM_CMD_SUFFIX},
+		{E_GRAM_CMD_PREFIX, E_GRAM_CMD_WORD},
+		{E_GRAM_CMD_PREFIX},
+		{E_GRAM_CMD_NAME, E_GRAM_CMD_SUFFIX},
+		{E_GRAM_CMD_NAME}
+	},
+	[E_GRAM_CMD_NAME] =
+	{
+		{E_TOKEN_WORD}
+	},
+	[E_GRAM_CMD_WORD] =
+	{
+		{E_TOKEN_WORD}
+	},
+	[E_GRAM_CMD_PREFIX] =
+	{
+		{E_GRAM_IO_REDIRECT},
+		{E_GRAM_CMD_PREFIX, E_GRAM_IO_REDIRECT}
+	},
+	[E_GRAM_CMD_SUFFIX] =
+	{
+		{E_GRAM_IO_REDIRECT},
+		{E_GRAM_CMD_SUFFIX, E_GRAM_IO_REDIRECT},
+		{E_TOKEN_WORD},
+		{E_GRAM_CMD_SUFFIX, E_TOKEN_WORD}
+	},
+	[E_GRAM_IO_REDIRECT] =
+	{
+		{E_GRAM_IO_FILE},
+		{E_TOKEN_IO_NUMBER, E_GRAM_IO_FILE},
+		{E_GRAM_IO_HERE},
+		{E_TOKEN_IO_NUMBER, E_GRAM_IO_HERE}
+	},
+	[E_GRAM_IO_FILE] =
+	{
+		{E_TOKEN_LESSGREAT, E_GRAM_FILENAME},
+		{E_TOKEN_LESSAND, E_GRAM_FILENAME},
+		{E_TOKEN_LESSGREAT, E_GRAM_FILENAME},
+		{E_TOKEN_GREATAND, E_GRAM_FILENAME},
+		{E_TOKEN_DGREAT, E_GRAM_FILENAME},
+		{E_TOKEN_LESSGREAT, E_GRAM_FILENAME}
+	},
+	[E_GRAM_FILENAME] =
+	{
+		{E_TOKEN_WORD}
+	},
+	[E_GRAM_IO_HERE] =
+	{
+		{E_TOKEN_DLESS, E_GRAM_HERE_END}
+	},
+	[E_GRAM_HERE_END] =
+	{
+		{E_TOKEN_WORD}
+	},
+	[E_GRAM_NEWLINE_LIST] =
+	{
+		{E_TOKEN_NEWLINE},
+		{E_GRAM_NEWLINE_LIST, E_TOKEN_NEWLINE}
+	},
+	[E_GRAM_LINEBREAK] =
+	{
+		{E_GRAM_NEWLINE_LIST}
+	},
+	[E_GRAM_SEPARATOR_OP] =
+	{
+		{E_TOKEN_SEMI}
+	},
+	[E_GRAM_SEPARATOR] =
+	{
+		{E_GRAM_SEPARATOR_OP, E_GRAM_LINEBREAK},
+		{E_GRAM_COMPLETE_COMMANDS}
+	},
+	[E_GRAM_SEQUENTIAL_SEP] =
+	{
+		{E_TOKEN_SEMI, E_GRAM_LINEBREAK},
+		{E_GRAM_COMPLETE_COMMANDS}
+	}
 };

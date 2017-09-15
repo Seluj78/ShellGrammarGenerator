@@ -1,11 +1,13 @@
-%token  WORD
-%token  NEWLINE
-%token  IO_NUMBER
-%token  DLESS
-%token  DGREAT
-%token  LESSAND
-%token  GREATAND
-%token  LESSGREAT
+%token  WORD :
+%token  NEWLINE :
+%token  IO_NUMBER :
+%token  DLESS : <<
+%token  DGREAT : >>
+%token  LESSAND : <&
+%token  GREATAND : >&
+%token  LESSGREAT : < , >
+%token  SEMI : ;
+%token  PIPE : |
 
 %tokentemplate E_TOKEN_
 
@@ -81,8 +83,8 @@ linebreak        : newline_list
 separator_op     : ';'
 ;
 separator        : separator_op linebreak
-| newline_list
+| complete_commands
 ;
 sequential_sep   : ';' linebreak
-| newline_list
+| complete_commands
 ;
