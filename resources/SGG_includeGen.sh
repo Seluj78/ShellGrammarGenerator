@@ -42,6 +42,6 @@ for header in ${needed_include} ; do
   if [[ "$header" != "enum.h" ]]; then
 	   echo -e "#include <$header>" >> $C_OUTPUT
   else
-    echo -e "#include <parser/$header>" >> $C_OUTPUT
+    echo -e "#include <$header>" >> $C_OUTPUT
   fi
 done
