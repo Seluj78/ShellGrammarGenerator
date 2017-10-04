@@ -8,6 +8,7 @@
 %token  LESSGREAT : < , >
 %token  SEMI : ;
 %token  PIPE : |
+%token  AND : &
 
 %tokentemplate E_TOKEN_
 
@@ -81,6 +82,7 @@ newline_list     :              NEWLINE
 linebreak        : newline_list
 ;
 separator_op     : ';'
+| '&'
 ;
 separator        : separator_op linebreak
 | complete_commands
