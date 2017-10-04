@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 
   nb_line=1
