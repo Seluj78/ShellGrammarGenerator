@@ -11,8 +11,8 @@ export INPUT="$EXEC_PATH/examples/grammar.yacc.example"
 
 #-- If there's to many parameters or 0, then display help --#
 if [ $# = 0 ] || [ $# -ge 7 ]; then
-	$EXEC_PATH/resources/SGG_help.sh
-	exit 1;
+  $EXEC_PATH/resources/SGG_help.sh
+  exit 1;
 fi
 
 #-- This module converts the long arguments into shorter ones for getopt --#
@@ -21,43 +21,48 @@ for arg in "$@"; do
   case "$arg" in
     "--help") set -- "$@" "-h" ;;
     "--input") set -- "$@" "-i" ;;
-    "--output")   set -- "$@" "-o" ;;
+    "--output") set -- "$@" "-o" ;;
+    "--debug")   set -- "$@" "-x" ;;
     *)        set -- "$@" "$arg" ;;
   esac
 done
 
 
 #-- Parses the options given to the script --#
-while getopts ":i:o:hH:" option
+while getopts ":i:o:hH:x" option
 do
-	case $option in
-		i)
-			export INPUT="$OPTARG"
-			;;
-		o)
-			export C_OUTPUT="$OPTARG"
-			;;
-		H)
-		    export H_OUTPUT="$OPTARG"
-		    ;;
-		h)
-			$EXEC_PATH/resources/SGG_help.sh
-			exit 1;
-			;;
-		:)
-			echo -e "the option \"$OPTARG\" requiert an argument"
-			exit 1
-			;;
-		\?)
-			echo -e "\"$OPTARG\" : invalid option"
-			exit 1
-			;;
-	esac
+  case $option in
+    i)
+      export INPUT="$OPTARG"
+      ;;
+    o)
+      export C_OUTPUT="$OPTARG"
+      ;;
+    H)
+        export H_OUTPUT="$OPTARG"
+        ;;
+    h)
+      $EXEC_PATH/resources/SGG_help.sh
+      exit 1;
+      ;;
+    x)
+      export DEBUG=1
+      echo "Debug mode enabled"
+      ;;
+    :)
+      echo -e "the option \"$OPTARG\" requiert an argument"
+      exit 1
+      ;;
+    \?)
+      echo -e "\"$OPTARG\" : invalid option"
+      exit 1
+      ;;
+  esac
 done
 
 $EXEC_PATH/resources/SGG_init.sh
 if [ $? != 0 ]; then
-	exit 1
+  exit 1
 fi
 
 cp $INPUT $INPUT_TMP
@@ -76,7 +81,7 @@ echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $INPUT)\"\n\033[4;1moutput:\03
 echo -e "\n"
 $EXEC_PATH/resources/SGG_Parser.sh
 if [[ $? != 0 ]]; then
-	exit 1
+  exit 1
 fi
 $EXEC_PATH/resources/SGG_HeaderFileGen.sh
 $EXEC_PATH/resources/SGG_tokenhandler.sh
