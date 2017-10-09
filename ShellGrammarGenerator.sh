@@ -27,6 +27,7 @@ for arg in "$@"; do
   esac
 done
 
+DEBUG="no"
 
 #-- Parses the options given to the script --#
 while getopts ":i:o:hH:x" option
@@ -46,7 +47,7 @@ do
       exit 1;
       ;;
     x)
-      export DEBUG=1
+      DEBUG="yes"
       echo "Debug mode enabled"
       ;;
     :)
@@ -60,7 +61,14 @@ do
   esac
 done
 
-$EXEC_PATH/resources/SGG_init.sh
+
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_init.sh
+else
+    $EXEC_PATH/resources/SGG_init.sh
+fi
+
 if [ $? != 0 ]; then
   exit 1
 fi
@@ -79,18 +87,67 @@ echo -e "##################################"
 echo -e -n "\n\033[4;1minput:\033[0m \"$(basename $INPUT)\"\n\033[4;1moutput:\033[0m \"$(basename $C_OUTPUT)\" && \"$(basename $H_OUTPUT)\""
 
 echo -e "\n"
-$EXEC_PATH/resources/SGG_Parser.sh
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_Parser.sh
+else
+    $EXEC_PATH/resources/SGG_Parser.sh
+fi
+
 if [[ $? != 0 ]]; then
   exit 1
 fi
-$EXEC_PATH/resources/SGG_HeaderFileGen.sh
-$EXEC_PATH/resources/SGG_tokenhandler.sh
-$EXEC_PATH/resources/SGG_includeGen.sh
-$EXEC_PATH/resources/SGG_RemoveInfo.sh
-$EXEC_PATH/resources/SGG_ProcessNumbers.sh
-$EXEC_PATH/resources/SGG_GoUpperCase.sh
-$EXEC_PATH/resources/SGG_Output3DArray.sh
-$EXEC_PATH/resources/SGG_Replace_token.sh
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_HeaderFileGen.sh
+else
+    $EXEC_PATH/resources/SGG_HeaderFileGen.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_tokenhandler.sh
+else
+    $EXEC_PATH/resources/SGG_tokenhandler.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_includeGen.sh
+else
+    $EXEC_PATH/resources/SGG_includeGen.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_RemoveInfo.sh
+else
+    $EXEC_PATH/resources/SGG_RemoveInfo.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_ProcessNumbers.sh
+else
+    $EXEC_PATH/resources/SGG_ProcessNumbers.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_GoUpperCase.sh
+else
+    $EXEC_PATH/resources/SGG_GoUpperCase.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_Output3DArray.sh
+else
+    $EXEC_PATH/resources/SGG_Output3DArray.sh
+fi
+
+if [ $DEBUG = "yes" ]; then
+    bash -x $EXEC_PATH/resources/SGG_Replace_token.sh
+else
+    $EXEC_PATH/resources/SGG_Replace_token.sh
+fi
+
+
+
 
 rm tmptokens
 rm count
