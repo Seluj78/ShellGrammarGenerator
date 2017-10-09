@@ -23,7 +23,7 @@ while [[ $(echo -e $line_string | awk '{print $1;}') = "%token" ]]; do
   for word in $old
   do
     if [[ $word != "," ]]; then
-      sed -i '' "s/$(echo "'$word'")/$(echo "$new")/g" "$C_OUTPUT"
+      sed -i.bak "s/$(echo "'$word'")/$(echo "$new")/g" "$C_OUTPUT"
     fi
     (( number_of_word-- ))
   done
@@ -42,10 +42,12 @@ while [[ $(echo -e $line_string | awk '{print $1;}') = "%token" ]]; do
   if [[ -n $new ]]; then
   old="E_GRAM_$new"
   new="$template$new"
-  sed -i '' "s/{$old, /{$new, /g" $C_OUTPUT
-  sed -i '' "s/, $old, /, $new, /g" $C_OUTPUT
-  sed -i '' "s/, $old}/, $new}/g" $C_OUTPUT
-  sed -i '' "s/{$old}/{$new}/g" $C_OUTPUT
+  sed -i.bak "s/{$old, /{$new, /g" $C_OUTPUT
+  sed -i.bak "s/, $old, /, $new, /g" $C_OUTPUT
+  sed -i.bak "s/, $old}/, $new}/g" $C_OUTPUT
+  sed -i.bak "s/{$old}/{$new}/g" $C_OUTPUT
+
+rm $C_OUTPUT.bak
 
 fi
     (( nb_line++ ))
